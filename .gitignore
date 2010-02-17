@@ -5,6 +5,7 @@ misc/
 *_log.txt
 *.out
 *.exe
+*.dll
 bin/gfx
 bin/sound
 bin/fnt
