@@ -5,6 +5,11 @@
 #include "Hge/Hge.hpp"
 #include "Tree/Vec2D.hpp"
 
+class Attachable {
+public:
+	virtual ~Attachable() { }
+};
+
 class Tile {
 public:
 	Tile();
