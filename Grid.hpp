@@ -1,22 +1,36 @@
 #pragma once
 
-#include <cstring>
+#include <vector>
+
 #include "Tree/Vec2D.hpp"
 
+#include "Tile.hpp"
+
 struct GridPos {
-	GridPos( size_t _x = 0, size_t _y = 0 ) :
+	GridPos( int _x = 0, int _y = 0 ) :
 		x( _x), y( _y) { }
-	size_t x, y;
+	int x, y;
 };
 
 class Grid {
 public:
-	Grid( int x, int box_w, size_t columns, int y, int box_h, size_t rows );
+	Grid( int x, int box_w, int columns, int y, int box_h, int rows );
+	
+	float ConvertXToScreen( int x_pos );
+	float ConvertYToScreen( int y_pos );
 	
 	Vec2D ConvertToScreen( GridPos p );
 	GridPos ConvertToGrid( Vec2D p );
+	
+	typedef boost::shared_ptr<Tile> TilePtr;
+	typedef std::vector<TilePtr> Tiles;
+	typedef std::vector<Tiles> TileGrid;
+	
+	TileGrid GetTiles() { return tiles; }
 private:
 	int x, y;
 	int box_w, box_h;
-	size_t columns, rows;
+	int columns, rows;
+	
+	TileGrid tiles;
 };
