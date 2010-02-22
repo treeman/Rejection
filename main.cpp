@@ -4,7 +4,7 @@
 #include "Tree/Game.hpp"
 #include "Tree/Logo.hpp"
 #include "Tree/Settings.hpp"
-#include "Demo.hpp"
+#include "Game.hpp"
 
 #include "Tree/Log.hpp"
 
@@ -44,10 +44,10 @@ int main( int argc, char *argv[] )
 			Tree::Game::Instance()->InitPostHge();
 			
 			//push your gamestates here
-			boost::shared_ptr<Tree::GameState> state( new Demo() );
+			boost::shared_ptr<Tree::GameState> state( new Game() );
 			Tree::Game::Instance()->Push( state );
-			state.reset( new Tree::Logo() );
-			Tree::Game::Instance()->Push( state );
+//			state.reset( new Tree::Logo() );
+//			Tree::Game::Instance()->Push( state );
 			
 			hge->System_Start();
 		}
