@@ -1,6 +1,6 @@
 #include "Tile.hpp"
 
-Tile::Tile() : tex( "gfx/grass.png" ), spr( new hgeSprite( tex, 0, 0, 32, 32 ) )
+Tile::Tile()
 {
 	
 }
@@ -21,9 +21,4 @@ bool Tile::Attach( boost::shared_ptr<Attachable> a )
 void Tile::Detach()
 {
 	attachment.reset();
-}
-	
-void Tile::Render( float x, float y )
-{
-	spr->Render( (int)x, (int)y );
 }

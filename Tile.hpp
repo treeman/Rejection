@@ -13,16 +13,14 @@ public:
 class Tile {
 public:
 	Tile();
+	virtual ~Tile() { }
 	
 	boost::shared_ptr<Attachable> Attachment();
 	
 	bool Attach( boost::shared_ptr<Attachable> a );
 	void Detach();
 	
-	void Render( float x, float y );
-private:
-	TexObj tex;
-	boost::shared_ptr<hgeSprite> spr;
-	
+	virtual void Render( float x, float y ) = 0;
+protected:
 	boost::shared_ptr<Attachable> attachment;
 };
