@@ -3,8 +3,9 @@
 #include <boost/shared_ptr.hpp>
 
 #include "Hge/Hge.hpp"
+#include "Tile.hpp"
 
-class Dude {
+class Dude : public Attachable {
 public:
 	Dude();
 

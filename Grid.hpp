@@ -26,7 +26,7 @@ public:
 	typedef std::vector<TilePtr> Tiles;
 	typedef std::vector<Tiles> TileGrid;
 	
-	TileGrid GetTiles() { return tiles; }
+	TileGrid &GetTiles() { return tiles; }
 private:
 	int x, y;
 	int box_w, box_h;

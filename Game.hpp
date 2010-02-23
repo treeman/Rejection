@@ -6,6 +6,7 @@
 #include "Tree/GameState.hpp"
 
 #include "World.hpp"
+#include "DudeController.hpp"
 
 class Game : public Tree::GameState {
 public:
@@ -19,4 +20,5 @@ private:
 	HgeObj hge;
 	
 	boost::shared_ptr<World> world;
+	boost::shared_ptr<Controller> dude_controller;
 };

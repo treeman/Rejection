@@ -4,11 +4,18 @@
 
 World::World() : grid( 32, 32, 23, 32, 32, 17 )
 {
-	
+	dude.reset( new Dude() );
+	grid.GetTiles()[4][4]->Attach( dude );
 }
+
+boost::shared_ptr<Dude> World::GetDude()
+{
+	return dude;
+}
+
 void World::Update( float dt )
 {
-	
+	dude->Update( dt );
 }
 void World::Render()
 {
@@ -18,4 +25,6 @@ void World::Render()
 			tile_grid[x][y]->Render( grid.ConvertXToScreen( x ), grid.ConvertYToScreen( y ) );
 		}
 	}
+	
+	dude->Render();
 }

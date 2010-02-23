@@ -4,7 +4,8 @@
 
 #include <boost/foreach.hpp>
 
-Game::Game() : world( new World() )
+Game::Game() : world( new World() ), 
+	dude_controller( new DudeController( world->GetDude() ) )
 {
 	
 }
@@ -17,11 +18,14 @@ bool Game::HandleEvent( hgeInputEvent &event )
 		}
 	}
 	
+	dude_controller->HandleEvent( event );
+	
 	return true;
 }
 
 void Game::Update( float dt )
 {
+	dude_controller->Update( dt );
 	world->Update( dt );
 }
 void Game::Render()
