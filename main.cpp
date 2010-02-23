@@ -56,10 +56,12 @@ int main( int argc, char *argv[] )
 	catch( std::exception &e )
 	{
 		L_ << "Fatal exception: " << e.what();
+		return -1;
 	}
 	catch( ... )
 	{
 		L_ << "Fatal unknown exception caught!";
+		return -2;
 	}
 	
 	//destroy the game

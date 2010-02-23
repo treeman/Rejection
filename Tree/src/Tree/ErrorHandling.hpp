@@ -1,11 +1,22 @@
-#ifndef ERRORHANDLING_HPP_INCLUDED
-#define ERRORHANDLING_HPP_INCLUDED
+#pragma once
 
 #include <exception>
 #include <stdexcept>
 
 namespace Error 
 {
+	class sprite_not_found : public std::exception {
+	public:
+		sprite_not_found( const char *err ) {
+			s = err;
+		}
+		virtual const char *what() const throw() {
+			return s;
+		}
+	private:
+		const char *s;
+	};
+	
 	class file_not_found : public std::exception {
 	public:
 		file_not_found( const char *err ) {
@@ -42,5 +53,3 @@ namespace Error
 		const char *s;
 	};
 }
-
-#endif

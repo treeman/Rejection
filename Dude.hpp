@@ -4,6 +4,7 @@
 
 #include "Hge/Hge.hpp"
 #include "Tile.hpp"
+#include "Sprite.hpp"
 
 class Dude : public Attachable {
 public:
@@ -12,6 +13,9 @@ public:
 	void Update( float dt );
 	void Render();
 private:
-	TexObj tex;
-	boost::shared_ptr<hgeSprite> spr;
+	typedef std::map<std::string, boost::shared_ptr<Sprite> > SpriteMap;
+	SpriteMap spr_map;
+	boost::shared_ptr<Sprite> curr_spr;
+	
+	boost::shared_ptr<SpriteLoader> spr_loader;
 };

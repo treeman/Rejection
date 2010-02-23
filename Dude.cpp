@@ -1,8 +1,17 @@
 #include "Dude.hpp"
 
-Dude::Dude() : tex( "gfx/geek.png" ), spr( new hgeSprite( tex, 0, 0, 32, 32 ) )
+Dude::Dude() : spr_loader( new SpriteLoader() )
 {
+	spr_loader->Load( "dude.lua" );
 	
+	curr_spr = spr_loader->Get( "dude_left" );
+	spr_map[ "dude_left" ] = curr_spr;
+	curr_spr = spr_loader->Get( "dude_right" );
+	spr_map[ "dude_right" ] = curr_spr;
+	curr_spr = spr_loader->Get( "dude_back" );
+	spr_map[ "dude_back" ] = curr_spr;
+	curr_spr = spr_loader->Get( "dude_front" );
+	spr_map[ "dude_front" ] = curr_spr;
 }
 
 void Dude::Update( float dt )
@@ -11,5 +20,5 @@ void Dude::Update( float dt )
 }
 void Dude::Render()
 {
-	spr->Render( 320, 320 );
+	curr_spr->spr->Render( 320, 320 );
 }
