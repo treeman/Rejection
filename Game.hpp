@@ -19,6 +19,7 @@ public:
 private:
 	HgeObj hge;
 	
+	boost::shared_ptr<SpriteLoader> spr_loader;
 	boost::shared_ptr<World> world;
 	boost::shared_ptr<Controller> dude_controller;
 };

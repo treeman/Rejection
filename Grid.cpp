@@ -1,7 +1,7 @@
 #include "Grid.hpp"
 #include "GrassTiles.hpp"
 
-Grid::Grid( int _x, int  _box_w, int _columns, int  _y, int  _box_h, int _rows ) :
+Grid::Grid( int _x, int  _box_w, int _columns, int  _y, int  _box_h, int _rows, boost::shared_ptr<SpriteLoader> spr_loader  ) :
 	x( _x), box_w( _box_w ), columns( _columns ), y( _y ), box_h( _box_h ), rows( _rows )
 {
 	int n = 0;
@@ -10,10 +10,10 @@ Grid::Grid( int _x, int  _box_w, int _columns, int  _y, int  _box_h, int _rows )
 		for( size_t y = 0; y < rows; ++y, ++n ) {
 			TilePtr tile;
 			if( n % 2 == 0 ) {
-				tile.reset( new LightGrassTile() );
+				tile.reset( new LightGrassTile( spr_loader ) );
 			}
 			else {
-				tile.reset( new DarkGrassTile() );
+				tile.reset( new DarkGrassTile( spr_loader ) );
 			}
 			column.push_back( tile );
 		}

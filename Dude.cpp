@@ -1,8 +1,8 @@
 #include "Dude.hpp"
 
-Dude::Dude() : spr_loader( new SpriteLoader() )
+Dude::Dude( boost::shared_ptr<SpriteLoader> spr_loader )
 {
-	spr_loader->Load( "dude.lua" );
+	spr_loader->Load( "sprites.lua" );
 	
 	curr_spr = spr_loader->Get( "dude_left" );
 	spr_map[ "dude_left" ] = curr_spr;

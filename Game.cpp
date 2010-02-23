@@ -4,10 +4,11 @@
 
 #include <boost/foreach.hpp>
 
-Game::Game() : world( new World() ), 
-	dude_controller( new DudeController( world->GetDude() ) )
+Game::Game() : spr_loader( new SpriteLoader() )
 {
-	
+	spr_loader->Load( "sprites.lua" );
+	world.reset( new World( spr_loader ) );
+	dude_controller.reset( new DudeController( world->GetDude() ) );
 }
 	
 bool Game::HandleEvent( hgeInputEvent &event )

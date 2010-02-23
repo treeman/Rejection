@@ -5,7 +5,7 @@
 
 class World {
 public:
-	World();
+	World( boost::shared_ptr<SpriteLoader> spr_loader );
 	
 	boost::shared_ptr<Dude> GetDude();
 	

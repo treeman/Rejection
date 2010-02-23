@@ -5,6 +5,7 @@
 #include "Tree/Vec2D.hpp"
 
 #include "Tile.hpp"
+#include "Sprite.hpp"
 
 struct GridPos {
 	GridPos( int _x = 0, int _y = 0 ) :
@@ -14,7 +15,7 @@ struct GridPos {
 
 class Grid {
 public:
-	Grid( int x, int box_w, int columns, int y, int box_h, int rows );
+	Grid( int x, int box_w, int columns, int y, int box_h, int rows, boost::shared_ptr<SpriteLoader> spr_loader );
 	
 	float ConvertXToScreen( int x_pos );
 	float ConvertYToScreen( int y_pos );

@@ -2,9 +2,9 @@
 
 #include <boost/foreach.hpp>
 
-World::World() : grid( 32, 32, 23, 32, 32, 17 )
+World::World( boost::shared_ptr<SpriteLoader> spr_loader ) : grid( 32, 32, 23, 32, 32, 17, spr_loader )
 {
-	dude.reset( new Dude() );
+	dude.reset( new Dude( spr_loader ) );
 	grid.GetTiles()[4][4]->Attach( dude );
 }
 

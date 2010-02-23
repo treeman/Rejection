@@ -1,23 +1,32 @@
 #pragma once
 
 #include "Tile.hpp"
+#include "Sprite.hpp"
 
-class DarkGrassTile : public Tile {
+//you have to define the desired grasses
+class GrassTile : public Tile {
 public:
-	DarkGrassTile() : tex( "gfx/darkgrass.png" ), spr( new hgeSprite( tex, 0, 0, 32, 32 ) ) { }
+	GrassTile();
+	virtual ~GrassTile() { }
 	
-	void Render( float x, float y ) { spr->Render( (int)x, (int)y ); }
+	void Update( float dt );
+	void Render( float x, float y );
 protected:
-	TexObj tex;
-	boost::shared_ptr<hgeSprite> spr;
+	boost::shared_ptr<Sprite> lvl1_spr;
+	boost::shared_ptr<Sprite> lvl2_spr;
+	boost::shared_ptr<Sprite> lvl3_spr;
+	
+	boost::shared_ptr<Sprite> curr_spr;
+	
+	float timer;
 };
 
-class LightGrassTile : public Tile {
+class DarkGrassTile : public GrassTile {
 public:
-	LightGrassTile() : tex( "gfx/grass.png" ), spr( new hgeSprite( tex, 0, 0, 32, 32 ) ) { }
-	
-	void Render( float x, float y ) { spr->Render( (int)x, (int)y ); }
-protected:
-	TexObj tex;
-	boost::shared_ptr<hgeSprite> spr;
+	DarkGrassTile( boost::shared_ptr<SpriteLoader> spr_loader );
+};
+
+class LightGrassTile : public GrassTile {
+public:
+	LightGrassTile( boost::shared_ptr<SpriteLoader> spr_loader );
 };
