@@ -16,6 +16,12 @@ boost::shared_ptr<Dude> World::GetDude()
 void World::Update( float dt )
 {
 	dude->Update( dt );
+	Grid::TileGrid tile_grid = grid.GetTiles();
+	for( size_t x = 0; x < tile_grid.size(); ++x ) {
+		for( size_t y = 0; y < tile_grid[x].size(); ++y ) {
+			tile_grid[x][y]->Update( dt );
+		}
+	}
 }
 void World::Render()
 {

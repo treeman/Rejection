@@ -20,6 +20,7 @@ public:
 	bool Attach( boost::shared_ptr<Attachable> a );
 	void Detach();
 	
+	virtual void Update( float ) { }
 	virtual void Render( float x, float y ) = 0;
 protected:
 	boost::shared_ptr<Attachable> attachment;
