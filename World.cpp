@@ -13,7 +13,7 @@ World::World( boost::shared_ptr<SpriteLoader> spr_loader ) : grid( 32, 32, 23, 3
 	SETTINGS->RegisterVariable( "mouse_grid_pos_show", boost::weak_ptr<Tree::BaseDator>( show_mouse_grid ) );
 	
 	show_bounds.reset( new Tree::Dator<bool>( false ) );
-	SETTINGS->RegisterVariable( "show_bounds", boost::weak_ptr<Tree::BaseDator>( show_bounds ) );
+	SETTINGS->RegisterVariable( "bounds_show", boost::weak_ptr<Tree::BaseDator>( show_bounds ) );
 }
 
 boost::shared_ptr<Dude> World::GetDude()
@@ -46,27 +46,26 @@ void World::Render()
 	hge->Input_GetMousePos( &mx, &my );
 	
 	Grid::TileGrid tile_grid = grid.GetTiles();
-//	for( size_t x = 0; x < tile_grid.size(); ++x ) {
-	for( size_t x = 0; x < 1; ++x ) {
+	for( size_t x = 0; x < tile_grid.size(); ++x ) {
 		for( size_t y = 0; y < tile_grid[x].size(); ++y ) {
 			const Tree::Rect r = tile_grid[x][y]->Bounds();
 			
 			if( r.IsOver( mx, my ) ) continue;
 			
 			tile_grid[x][y]->Render();
-			if( show_bounds ) {
-				hgeh::render_rect( hge, r.x1, r.y1, r.x2, r.y2, 0xff666666 );
-			}
+//			if( show_bounds->Val() ) {
+//				hgeh::render_rect( hge, r.x1, r.y1, r.x2, r.y2, 0xff666666 );
+//			}
 		}
 	}
 	
 	dude->Render();
-	if( show_bounds ) {
+	if( show_bounds->Val() ) {
 		const Tree::Rect r = dude->Bounds();
 		hgeh::render_rect( hge, r.x1, r.y1, r.x2, r.y2, 0xff999999 );
 	}
 	
-	if( show_mouse_grid ) {
+	if( show_mouse_grid->Val() ) {
 		fnt->SetColor( 0xffffffff );
 		
 		GridPos grid_pos = grid.ConvertToGrid( Vec2D( mx, my ) );

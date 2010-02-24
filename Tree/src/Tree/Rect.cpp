@@ -9,7 +9,7 @@ Rect::Rect( float x, float y, float width, float height, bool is_centered )
 		
 void Rect::Set( float x, float y, float width, float height, bool is_centered )
 {
-	x1 = x; y = y1;
+	x1 = x; y1 = y;
 	x2 = x + width;
 	y2 = y + height;
 }
