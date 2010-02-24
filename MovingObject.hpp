@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Tree/Vec2D.hpp"
+
 class MovingObject {
 public:
 	virtual ~MovingObject() { }

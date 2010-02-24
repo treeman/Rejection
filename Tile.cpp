@@ -1,6 +1,6 @@
 #include "Tile.hpp"
 
-Tile::Tile()
+Tile::Tile( Vec2D p ) : pos( p )
 {
 	
 }
@@ -21,4 +21,9 @@ bool Tile::Attach( boost::shared_ptr<Attachable> a )
 void Tile::Detach()
 {
 	attachment.reset();
+}
+
+Tree::Rect Tile::Bounds() const 
+{ 
+	return Tree::Rect( pos.x, pos.y, 32, 32 );
 }

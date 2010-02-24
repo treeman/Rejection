@@ -3,12 +3,16 @@
 #include <boost/shared_ptr.hpp>
 
 #include "Hge/Hge.hpp"
+#include "Tree/Rect.hpp"
 #include "Tile.hpp"
 #include "Sprite.hpp"
+#include "MovingObject.hpp"
 
-class Dude : public Attachable {
+class Dude : public Attachable, public MovingObject {
 public:
 	Dude( boost::shared_ptr<SpriteLoader> spr_loader );
+	
+	Tree::Rect Bounds() const;
 
 	void Update( float dt );
 	void Render();

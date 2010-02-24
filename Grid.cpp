@@ -10,10 +10,10 @@ Grid::Grid( int _x, int  _box_w, int _columns, int  _y, int  _box_h, int _rows, 
 		for( size_t y = 0; y < rows; ++y, ++n ) {
 			TilePtr tile;
 			if( n % 2 == 0 ) {
-				tile.reset( new LightGrassTile( spr_loader ) );
+				tile.reset( new LightGrassTile( ConvertToScreen( GridPos( x, y ) ), spr_loader ) );
 			}
 			else {
-				tile.reset( new DarkGrassTile( spr_loader ) );
+				tile.reset( new DarkGrassTile( ConvertToScreen( GridPos( x, y ) ), spr_loader ) );
 			}
 			column.push_back( tile );
 		}
@@ -36,5 +36,8 @@ Vec2D Grid::ConvertToScreen( GridPos p )
 }
 GridPos Grid::ConvertToGrid( Vec2D p )
 {
-	return GridPos( (int)(( p.x - x ) / box_w), (int)(( p.y - y ) / box_h ) );
+	return GridPos( 
+		math::clip( (int)(( p.x - x ) / box_w), 0, columns - 1 ), 
+		math::clip( (int)(( p.y - y ) / box_h), 0, rows - 1 )
+	);
 }

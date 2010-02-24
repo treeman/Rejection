@@ -1,7 +1,11 @@
 #pragma once
 
+#include "Hge/Hge.hpp"
+
 #include "Grid.hpp"
 #include "Dude.hpp"
+#include "Tree/Settings.hpp"
+#include "Tree/Dator.hpp"
 
 class World {
 public:
@@ -15,4 +19,10 @@ private:
 	Grid grid;
 	
 	boost::shared_ptr<Dude> dude;
+	boost::shared_ptr<hgeFont> fnt;
+	
+	boost::shared_ptr<Tree::Dator<bool> > show_mouse_grid;
+	boost::shared_ptr<Tree::Dator<bool> > show_bounds;
+	
+	HgeObj hge;
 };

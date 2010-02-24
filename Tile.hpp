@@ -4,6 +4,7 @@
 
 #include "Hge/Hge.hpp"
 #include "Tree/Vec2D.hpp"
+#include "Tree/Rect.hpp"
 
 class Attachable {
 public:
@@ -12,7 +13,7 @@ public:
 
 class Tile {
 public:
-	Tile();
+	Tile( Vec2D pos );
 	virtual ~Tile() { }
 	
 	boost::shared_ptr<Attachable> Attachment();
@@ -20,8 +21,16 @@ public:
 	bool Attach( boost::shared_ptr<Attachable> a );
 	void Detach();
 	
+	virtual void WalkOver() { }
+	
+	void SetPos( Vec2D p ) { pos = p; }
+	Vec2D GetPos() const { return pos; }
+	
+	virtual Tree::Rect Bounds() const;
+	
 	virtual void Update( float ) { }
-	virtual void Render( float x, float y ) = 0;
+	virtual void Render() = 0;
 protected:
 	boost::shared_ptr<Attachable> attachment;
+	Vec2D pos;
 };

@@ -6,11 +6,13 @@
 //you have to define the desired grasses
 class GrassTile : public Tile {
 public:
-	GrassTile();
+	GrassTile( Vec2D pos );
 	virtual ~GrassTile() { }
 	
+	void WalkOver();
+	
 	void Update( float dt );
-	void Render( float x, float y );
+	void Render();
 protected:
 	boost::shared_ptr<Sprite> lvl1_spr;
 	boost::shared_ptr<Sprite> lvl2_spr;
@@ -23,10 +25,10 @@ protected:
 
 class DarkGrassTile : public GrassTile {
 public:
-	DarkGrassTile( boost::shared_ptr<SpriteLoader> spr_loader );
+	DarkGrassTile( Vec2D pos, boost::shared_ptr<SpriteLoader> spr_loader );
 };
 
 class LightGrassTile : public GrassTile {
 public:
-	LightGrassTile( boost::shared_ptr<SpriteLoader> spr_loader );
+	LightGrassTile( Vec2D pos, boost::shared_ptr<SpriteLoader> spr_loader );
 };

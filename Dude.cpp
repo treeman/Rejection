@@ -14,11 +14,16 @@ Dude::Dude( boost::shared_ptr<SpriteLoader> spr_loader )
 	spr_map[ "dude_front" ] = curr_spr;
 }
 
+Tree::Rect Dude::Bounds() const
+{
+	return Tree::Rect( pos.x + 1, pos.y + 1, 30, 30 );
+}
+
 void Dude::Update( float dt )
 {
 	
 }
 void Dude::Render()
 {
-	curr_spr->spr->Render( 320, 320 );
+	curr_spr->spr->Render( pos.x, pos.y );
 }
