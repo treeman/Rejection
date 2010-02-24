@@ -14,8 +14,11 @@ void GrassTile::Update( float dt )
 {
 	timer += dt;
 	
-	if( timer <= 2.0 ) { curr_spr = lvl1_spr; }
-	else if( timer <= 5.0 ) { curr_spr = lvl2_spr; }
+	const float lvl2 = 2.0;
+	const float lvl3 = 5.0;
+	
+	if( timer <= lvl2 ) { curr_spr = lvl1_spr; }
+	else if( timer <= lvl3 ) { curr_spr = lvl2_spr; }
 	else { curr_spr = lvl3_spr; }
 }
 

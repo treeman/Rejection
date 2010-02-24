@@ -31,11 +31,11 @@ void World::Update( float dt )
 		for( size_t y = 0; y < tile_grid[x].size(); ++y ) {
 			const Grid::TilePtr tile = tile_grid[x][y];
 			
-//			if( //dude_gpos.x <= x && dude_gpos.y <= y && 
-//				dude->Bounds().Intersects( tile->Bounds() ) )
-//			{
+			if( //dude_gpos.x <= x && dude_gpos.y <= y && 
+				dude->Bounds().Intersects( tile->Bounds() ) )
+			{
 				tile->WalkOver();
-//			}
+			}
 			tile->Update( dt );
 		}
 	}
@@ -50,12 +50,12 @@ void World::Render()
 		for( size_t y = 0; y < tile_grid[x].size(); ++y ) {
 			const Tree::Rect r = tile_grid[x][y]->Bounds();
 			
-			if( r.IsOver( mx, my ) ) continue;
+//			if( r.IsOver( mx, my ) ) continue;
 			
 			tile_grid[x][y]->Render();
-//			if( show_bounds->Val() ) {
-//				hgeh::render_rect( hge, r.x1, r.y1, r.x2, r.y2, 0xff666666 );
-//			}
+			if( show_bounds->Val() ) {
+				hgeh::render_rect( hge, r.x1, r.y1, r.x2, r.y2, 0xff666666 );
+			}
 		}
 	}
 	

@@ -15,6 +15,21 @@ public:
 	void SetVel( Vec2D v ) { vel = v; }
 	Vec2D GetVel() const { return vel; }
 	
+	void MoveLeft();
+	void MoveRight();
+	void MoveUp();
+	void MoveDown();
+	
+	bool WantsLeft();
+	bool WantsRight();
+	bool WantsUp();
+	bool WantsDown();
+	
+	bool FacesLeft();
+	bool FacesRight();
+	bool FacesUp();
+	bool FacesDown();
+	
 	void UpdateMovement();
 protected:
 	Vec2D pos;

@@ -3,10 +3,10 @@
 
 #include <boost/assert.hpp>
 
-Sprite::Sprite( std::string file, float x, float y, float w, float h ) : tex( file ), 
-	spr( new hgeSprite( tex, x, y, w, h ) )
+Sprite::Sprite( std::string file, float x, float y, float w, float h, DWORD col ) : tex( file ), 
+	spr( new hgeSprite( tex, x, y, w, h ) ), color( col )
 {
-	
+	if( col != 0 ) spr->SetColor( col );
 }
 
 SpriteLoader::SpriteLoader() { }
@@ -27,6 +27,7 @@ void SpriteLoader::Load( std::string lua_file ) throw( Error::lua_error & )
 		//parse a sprite here
 		std::string name, path;
 		float x = 0, y = 0, w = 0, h = 0;
+		DWORD color = 0;
 		
 		bool is_valid = true;
 		
@@ -42,6 +43,13 @@ void SpriteLoader::Load( std::string lua_file ) throw( Error::lua_error & )
 		if( lua_isstring( L, -1 ) ) {
 			path = lua_tostring( L, -1 );
 		} else { is_valid = false; }
+		lua_pop( L, 1 );
+		
+		lua_pushstring( L, "color" );
+		lua_gettable( L, -2 );
+		if( lua_isnumber( L, -1 ) ) {
+			color = (DWORD)lua_tonumber( L, -1 );
+		}
 		lua_pop( L, 1 );
 		
 		lua_pushstring( L, "x" );
@@ -73,7 +81,7 @@ void SpriteLoader::Load( std::string lua_file ) throw( Error::lua_error & )
 		lua_pop( L, 1 );
 		
 		if( is_valid ) {
-			boost::shared_ptr<Sprite> spr( new Sprite( path, x, y, w, h ) );
+			boost::shared_ptr<Sprite> spr( new Sprite( path, x, y, w, h, color ) );
 			sprite_map[name] = spr;
 		}
 	}
