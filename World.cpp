@@ -31,16 +31,6 @@ void World::Update( float dt )
 	
 	Grid::TileGrid tile_grid = grid.GetTiles();
 	
-//	if( dude->WantsLeft() || dude->WantsRight() ) {
-////		ConstrainDudeY();
-//	}
-//	else if( dude->WantsUp() || dude->WantsDown() ) {
-////		ConstrainDudeX();
-//	}
-//	else {
-////		ConstrainDudeTile();
-//	}
-	
 	const GridPos dude_gpos = grid.ConvertToGrid( dude->GetPos() );
 	GridPos dude_next_pos;
 	if( dude->WantsLeft() ) { dude_next_pos = GridPos( dude_gpos.x - 1, dude_gpos.y ); }

@@ -43,5 +43,13 @@ bool DudeController::HandleEvent( hgeInputEvent &e )
 }
 void DudeController::Update( float dt )
 {
-	
+	//ugly hack to stop the dude moving when you're not pressing any key
+	//<33
+	if( !hge->Input_GetKeyState( HGEK_LEFT ) &&
+		!hge->Input_GetKeyState( HGEK_RIGHT ) &&
+		!hge->Input_GetKeyState( HGEK_UP ) &&
+		!hge->Input_GetKeyState( HGEK_DOWN ) )
+	{
+		dude->MoveStop();
+	}
 }

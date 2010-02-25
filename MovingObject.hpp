@@ -60,6 +60,12 @@ protected:
 	
 	void ForceStop();
 	
-//	Vec2D next_vel;
+	void ClearNext();
+	void NextLeft();
+	void NextRight();
+	void NextUp();
+	void NextDown();
+	
+	Vec2D next_move;
 	Vec2D face_dir;
 };

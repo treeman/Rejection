@@ -26,9 +26,5 @@ private:
 	
 	HgeObj hge;
 	
-	void ConstrainDudeX();
-	void ConstrainDudeY();
-	void ConstrainDudeTile();
-	
 	boost::shared_ptr<Tree::Dator<bool> > debug_dude;
 };

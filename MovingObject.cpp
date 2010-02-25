@@ -20,6 +20,9 @@ void MovingObject::MoveLeft()
 		DirFaceLeft();
 		wants_stop = false;
 	}
+	else {
+		NextLeft();
+	}
 }
 void MovingObject::MoveRight()
 {
@@ -27,6 +30,9 @@ void MovingObject::MoveRight()
 		vel.x = GetSpeed(); vel.y = 0;
 		DirFaceRight();
 		wants_stop = false;
+	}
+	else {
+		NextRight();
 	}
 }
 void MovingObject::MoveUp()
@@ -36,6 +42,9 @@ void MovingObject::MoveUp()
 		DirFaceUp();
 		wants_stop = false;
 	}
+	else {
+		NextUp();
+	}
 }
 void MovingObject::MoveDown()
 {
@@ -43,6 +52,9 @@ void MovingObject::MoveDown()
 		vel.x = 0; vel.y = GetSpeed();
 		DirFaceDown();
 		wants_stop = false;
+	}
+	else {
+		NextDown();
 	}
 }
 bool MovingObject::IsMoving()
@@ -132,4 +144,36 @@ void MovingObject::ForceStop()
 	wants_stop = stop_set = false;
 	pos = stop_pos;
 	vel = Vec2D::zero;
+	if( next_move != Vec2D::zero ) {
+		if( next_move == Vec2D::left ) MoveLeft();
+		if( next_move == Vec2D::right ) MoveRight();
+		if( next_move == Vec2D::up ) MoveUp();
+		if( next_move == Vec2D::down ) MoveDown();
+		ClearNext();
+	}
+}
+
+void MovingObject::ClearNext()
+{
+	next_move = Vec2D::zero;
+}
+void MovingObject::NextLeft()
+{
+	next_move = Vec2D::left;
+	MoveStop();
+}
+void MovingObject::NextRight()
+{
+	next_move = Vec2D::right;
+	MoveStop();
+}
+void MovingObject::NextUp()
+{
+	next_move = Vec2D::up;
+	MoveStop();
+}
+void MovingObject::NextDown()
+{
+	next_move = Vec2D::down;
+	MoveStop();
 }
