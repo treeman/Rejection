@@ -1,8 +1,17 @@
 #include "MovingObject.hpp"
 
-void MovingObject::Stop()
+MovingObject::MovingObject()
 {
-	vel = Vec2D::zero;
+	wants_stop = stop_set = false;
+}
+void MovingObject::StopAt( Vec2D target )
+{
+	stop_pos = target;
+	stop_set = true;
+}
+void MovingObject::MoveStop()
+{
+	wants_stop = true;
 }
 void MovingObject::MoveLeft()
 {
@@ -24,7 +33,10 @@ void MovingObject::MoveDown()
 	vel.x = 0; vel.y = GetSpeed();
 	DirFaceDown();
 }
-
+bool MovingObject::WantsStop()
+{
+	return wants_stop;
+}
 bool MovingObject::WantsLeft()
 {
 	return vel.x < 0;
@@ -62,6 +74,20 @@ bool MovingObject::FacesDown()
 void MovingObject::UpdateMovement( float dt )
 {
 	pos += vel * dt;
+	if( stop_set ) {
+		if( WantsLeft() && pos.x < stop_pos.x ) {
+			ForceStop();
+		}
+		else if( WantsRight() && pos.x > stop_pos.x ) {
+			ForceStop();
+		}
+		else if( WantsUp() && pos.y < stop_pos.y ) {
+			ForceStop();
+		}
+		else if( WantsDown() && pos.y > stop_pos.y ) {
+			ForceStop();
+		}
+	}
 }
 
 void MovingObject::DirFaceLeft()
@@ -83,4 +109,10 @@ void MovingObject::DirFaceDown()
 {
 	FaceDown();
 	face_dir = Vec2D::down;
+}
+
+void MovingObject::ForceStop()
+{
+	wants_stop = stop_set = false;
+	pos = stop_pos;
 }

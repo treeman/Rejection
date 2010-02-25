@@ -4,6 +4,8 @@
 
 #include "Hge/Hge.hpp"
 #include "Tree/Rect.hpp"
+#include "Tree/Settings.hpp"
+#include "Tree/Dator.hpp"
 #include "Tile.hpp"
 #include "Sprite.hpp"
 #include "MovingObject.hpp"

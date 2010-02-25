@@ -24,6 +24,22 @@ bool DudeController::HandleEvent( hgeInputEvent &e )
 				break;
 		}
 	}
+	else if( e.type == INPUT_KEYUP ) {
+		switch( e.key ) {
+			case HGEK_LEFT:
+				if( dude->WantsLeft() ) dude->MoveStop();
+				break;
+			case HGEK_RIGHT:
+				if( dude->WantsRight() ) dude->MoveStop();
+				break;
+			case HGEK_UP:
+				if( dude->WantsUp() ) dude->MoveStop();
+				break;
+			case HGEK_DOWN:
+				if( dude->WantsDown() ) dude->MoveStop();
+				break;
+		}
+	}
 }
 void DudeController::Update( float dt )
 {

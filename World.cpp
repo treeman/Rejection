@@ -24,15 +24,71 @@ boost::shared_ptr<Dude> World::GetDude()
 void World::Update( float dt )
 {
 	dude->Update( dt );
-	const GridPos dude_gpos = grid.ConvertToGrid( dude->GetPos() );
+	
 	Grid::TileGrid tile_grid = grid.GetTiles();
+	
+	if( dude->WantsStop() ) {
+		
+		//a grid pos will be a valid array index
+		const GridPos dude_gpos = grid.ConvertToGrid( dude->GetPos() );
+		if( dude->WantsLeft() ) 
+		{
+			//checks if the tile to the left isn't empty (dude is to the far left) and
+			//if it intersects with the tile to the left, in which case it stops at the
+			//tile to the left
+			if( dude_gpos.x >= 0 &&
+				tile_grid[dude_gpos.x - 1][dude_gpos.y]->Bounds().Intersects( dude->Bounds() ) ) 
+			{
+				dude->StopAt( grid.ConvertToScreen( GridPos( dude_gpos.x - 1, dude_gpos.y ) ) );
+			}
+			//else stop it immediatly
+			else {
+				dude->StopAt( grid.ConvertToScreen( dude_gpos ) );
+			}
+		}
+		else if( dude->WantsRight() ) 
+		{
+			//same but to the right
+			//-1 to get array index
+			if( dude_gpos.x <= grid.GetColumns() - 1 &&
+				tile_grid[dude_gpos.x + 1][dude_gpos.y]->Bounds().Intersects( dude->Bounds() ) ) 
+			{
+				dude->StopAt( grid.ConvertToScreen( GridPos( dude_gpos.x + 1, dude_gpos.y ) ) );
+			}
+			else {
+				dude->StopAt( grid.ConvertToScreen( dude_gpos ) );
+			}
+		}
+		//up and down compare to left and right
+		else if( dude->WantsUp() ) 
+		{
+			if( dude_gpos.y >= 0 &&
+				tile_grid[dude_gpos.x][dude_gpos.y - 1]->Bounds().Intersects( dude->Bounds() ) ) 
+			{
+				dude->StopAt( grid.ConvertToScreen( GridPos( dude_gpos.x, dude_gpos.y - 1 ) ) );
+			}
+			else {
+				dude->StopAt( grid.ConvertToScreen( dude_gpos ) );
+			}
+		}
+		else if( dude->WantsDown() ) 
+		{
+			if( dude_gpos.y <= grid.GetRows() + 1 &&
+				tile_grid[dude_gpos.x][dude_gpos.y + 1]->Bounds().Intersects( dude->Bounds() ) ) 
+			{
+				dude->StopAt( grid.ConvertToScreen( GridPos( dude_gpos.x, dude_gpos.y + 1 ) ) );
+			}
+			else {
+				dude->StopAt( grid.ConvertToScreen( dude_gpos ) );
+			}
+		}
+	}
 	
 	for( size_t x = 0; x < tile_grid.size(); ++x ) {
 		for( size_t y = 0; y < tile_grid[x].size(); ++y ) {
 			const Grid::TilePtr tile = tile_grid[x][y];
 			
-			if( //dude_gpos.x <= x && dude_gpos.y <= y && 
-				dude->Bounds().Intersects( tile->Bounds() ) )
+			if( dude->Bounds().Intersects( tile->Bounds() ) )
 			{
 				tile->WalkOver();
 			}
@@ -49,8 +105,6 @@ void World::Render()
 	for( size_t x = 0; x < tile_grid.size(); ++x ) {
 		for( size_t y = 0; y < tile_grid[x].size(); ++y ) {
 			const Tree::Rect r = tile_grid[x][y]->Bounds();
-			
-//			if( r.IsOver( mx, my ) ) continue;
 			
 			tile_grid[x][y]->Render();
 			if( show_bounds->Val() ) {

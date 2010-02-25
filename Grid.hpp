@@ -23,6 +23,9 @@ public:
 	Vec2D ConvertToScreen( GridPos p );
 	GridPos ConvertToGrid( Vec2D p );
 	
+	int GetColumns() { return columns; }
+	int GetRows() { return rows; }
+	
 	typedef boost::shared_ptr<Tile> TilePtr;
 	typedef std::vector<TilePtr> Tiles;
 	typedef std::vector<Tiles> TileGrid;
