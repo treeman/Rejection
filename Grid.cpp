@@ -1,24 +1,9 @@
 #include "Grid.hpp"
-#include "GrassTiles.hpp"
 
-Grid::Grid( int _x, int  _box_w, int _columns, int  _y, int  _box_h, int _rows, boost::shared_ptr<SpriteLoader> spr_loader  ) :
+Grid::Grid( int _x, int  _box_w, int _columns, int  _y, int  _box_h, int _rows ) :
 	x( _x), box_w( _box_w ), y( _y ), box_h( _box_h ), columns( _columns ), rows( _rows )
 {
-	int n = 0;
-	for( size_t x = 0; x < columns; ++x ) {
-		Tiles column;
-		for( size_t y = 0; y < rows; ++y, ++n ) {
-			TilePtr tile;
-			if( n % 2 == 0 ) {
-				tile.reset( new LightGrassTile( ConvertToScreen( GridPos( x, y ) ), spr_loader ) );
-			}
-			else {
-				tile.reset( new DarkGrassTile( ConvertToScreen( GridPos( x, y ) ), spr_loader ) );
-			}
-			column.push_back( tile );
-		}
-		tiles.push_back( column );
-	}
+	
 }
 
 float Grid::ConvertXToScreen( int x_pos )
@@ -42,20 +27,9 @@ GridPos Grid::ConvertToGrid( Vec2D p )
 	);
 }
 
-bool Grid::IsWalkable( int x, int y )
-{
-	if( !IsValid( x, y ) ) return false;
-	else return tiles[x][y]->IsWalkable();
-}
-
 void Grid::GetBounds( float &x1, float &y1, float &x2, float &y2 )
 {
 	x1 = x; y1 = y;
 	x2 = x + columns * box_w;
 	y2 = y + rows * box_h;
-}
-
-bool Grid::IsValid( int x, int y )
-{
-	return x >= 0 && x < columns && y >= 0 && y < rows;
 }

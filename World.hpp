@@ -6,6 +6,7 @@
 #include "Tree/Dator.hpp"
 
 #include "Grid.hpp"
+#include "Tile.hpp"
 #include "Dude.hpp"
 #include "Girl.hpp"
 #include "GirlController.hpp"
@@ -37,6 +38,16 @@ private:
 	typedef std::vector<boost::shared_ptr<Girl> > Girls;
 	Girls girls;
 	boost::shared_ptr<GirlController> girl_controller;
+	
+	typedef boost::shared_ptr<Tile> TilePtr;
+	typedef std::vector<TilePtr> Tiles;
+	typedef std::vector<Tiles> TileGrid;
+	
+	void InitTiles( boost::shared_ptr<SpriteLoader> spr_loader );
+	bool IsWalkable( int x, int y );
+	bool IsValid( int x, int y );
+	
+	TileGrid tiles;
 	
 	boost::shared_ptr<Tree::Dator<bool> > show_mouse_grid;
 	boost::shared_ptr<Tree::Dator<bool> > show_bounds;

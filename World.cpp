@@ -2,10 +2,13 @@
 
 #include <boost/foreach.hpp>
 #include "Tree/Log.hpp"
+#include "GrassTiles.hpp"
 
-World::World( boost::shared_ptr<SpriteLoader> _spr_loader ) : grid( 32, 32, 23, 32, 32, 17, _spr_loader ),
+World::World( boost::shared_ptr<SpriteLoader> _spr_loader ) : grid( 32, 32, 23, 32, 32, 17 ),
 	spr_loader( _spr_loader )
 {
+	InitTiles( spr_loader );
+	
 	dude.reset( new Dude( spr_loader ) );
 	dude->SetPos( grid.ConvertToScreen( GridPos( 5, 0 ) ) );
 	
@@ -39,10 +42,9 @@ void World::Update( float dt )
 	}
 	UpdatePerson( dude, dt );
 	
-	Grid::TileGrid tile_grid = grid.GetTiles();
-	for( size_t x = 0; x < tile_grid.size(); ++x ) {
-		for( size_t y = 0; y < tile_grid[x].size(); ++y ) {
-			const Grid::TilePtr tile = tile_grid[x][y];
+	for( size_t x = 0; x < tiles.size(); ++x ) {
+		for( size_t y = 0; y < tiles[x].size(); ++y ) {
+			const TilePtr tile = tiles[x][y];
 			
 			if( dude->Bounds().Intersects( tile->Bounds() ) )
 			{
@@ -65,12 +67,11 @@ void World::Render()
 	float mx, my;
 	hge->Input_GetMousePos( &mx, &my );
 	
-	Grid::TileGrid tile_grid = grid.GetTiles();
-	for( size_t x = 0; x < tile_grid.size(); ++x ) {
-		for( size_t y = 0; y < tile_grid[x].size(); ++y ) {
-			const Tree::Rect r = tile_grid[x][y]->Bounds();
+	for( size_t x = 0; x < tiles.size(); ++x ) {
+		for( size_t y = 0; y < tiles[x].size(); ++y ) {
+			const Tree::Rect r = tiles[x][y]->Bounds();
 			
-			tile_grid[x][y]->Render();
+			tiles[x][y]->Render();
 			if( show_bounds->Val() ) {
 				hgeh::render_rect( hge, r.x1, r.y1, r.x2, r.y2, 0xff666666 );
 			}
@@ -108,8 +109,6 @@ void World::UpdatePerson( boost::shared_ptr<Person> o, float dt )
 {
 	o->Update( dt );
 	
-	Grid::TileGrid tile_grid = grid.GetTiles();
-	
 	//a grid pos will be a valid array index
 	const GridPos grid_pos = grid.ConvertToGrid( o->Bounds().GetCenter() );
 	
@@ -119,8 +118,8 @@ void World::UpdatePerson( boost::shared_ptr<Person> o, float dt )
 		if( o->WantsLeft() ) 
 		{
 			//if we can walk to the left and if we're intersecting with it
-			if( grid.IsWalkable( grid_pos.x - 1, grid_pos.y ) &&
-				tile_grid[grid_pos.x - 1][grid_pos.y]->Bounds().Intersects( o->Bounds() ) ) 
+			if( IsWalkable( grid_pos.x - 1, grid_pos.y ) &&
+				tiles[grid_pos.x - 1][grid_pos.y]->Bounds().Intersects( o->Bounds() ) ) 
 			{
 				o->StopAt( grid.ConvertToScreen( GridPos( grid_pos.x - 1, grid_pos.y ) ) );
 			}
@@ -132,8 +131,8 @@ void World::UpdatePerson( boost::shared_ptr<Person> o, float dt )
 		else if( o->WantsRight() ) 
 		{
 			//same but to the right
-			if( grid.IsWalkable( grid_pos.x + 1, grid_pos.y ) &&
-				tile_grid[grid_pos.x + 1][grid_pos.y]->Bounds().Intersects( o->Bounds() ) ) 
+			if( IsWalkable( grid_pos.x + 1, grid_pos.y ) &&
+				tiles[grid_pos.x + 1][grid_pos.y]->Bounds().Intersects( o->Bounds() ) ) 
 			{
 				o->StopAt( grid.ConvertToScreen( GridPos( grid_pos.x + 1, grid_pos.y ) ) );
 			}
@@ -144,8 +143,8 @@ void World::UpdatePerson( boost::shared_ptr<Person> o, float dt )
 		//up and down compare to left and right
 		else if( o->WantsUp() ) 
 		{
-			if( grid.IsWalkable( grid_pos.x, grid_pos.y - 1 ) &&
-				tile_grid[grid_pos.x][grid_pos.y - 1]->Bounds().Intersects( o->Bounds() ) ) 
+			if( IsWalkable( grid_pos.x, grid_pos.y - 1 ) &&
+				tiles[grid_pos.x][grid_pos.y - 1]->Bounds().Intersects( o->Bounds() ) ) 
 			{
 				o->StopAt( grid.ConvertToScreen( GridPos( grid_pos.x, grid_pos.y - 1 ) ) );
 			}
@@ -155,8 +154,8 @@ void World::UpdatePerson( boost::shared_ptr<Person> o, float dt )
 		}
 		else if( o->WantsDown() ) 
 		{
-			if( grid.IsWalkable( grid_pos.x, grid_pos.y + 1 ) &&
-				tile_grid[grid_pos.x][grid_pos.y + 1]->Bounds().Intersects( o->Bounds() ) ) 
+			if( IsWalkable( grid_pos.x, grid_pos.y + 1 ) &&
+				tiles[grid_pos.x][grid_pos.y + 1]->Bounds().Intersects( o->Bounds() ) ) 
 			{
 				o->StopAt( grid.ConvertToScreen( GridPos( grid_pos.x, grid_pos.y + 1 ) ) );
 			}
@@ -203,4 +202,32 @@ void World::KillGirl( boost::shared_ptr<Girl> girl )
 {
 	girl_controller->Detach( girl );
 	std::remove( girls.begin(), girls.end(), girl );
+}
+
+void World::InitTiles( boost::shared_ptr<SpriteLoader> spr_loader )
+{
+	int n = 0;
+	for( size_t x = 0; x < grid.GetColumns(); ++x ) {
+		Tiles column;
+		for( size_t y = 0; y < grid.GetRows(); ++y, ++n ) {
+			TilePtr tile;
+			if( n % 2 == 0 ) {
+				tile.reset( new LightGrassTile( grid.ConvertToScreen( GridPos( x, y ) ), spr_loader ) );
+			}
+			else {
+				tile.reset( new DarkGrassTile( grid.ConvertToScreen( GridPos( x, y ) ), spr_loader ) );
+			}
+			column.push_back( tile );
+		}
+		tiles.push_back( column );
+	}
+}
+bool World::IsWalkable( int x, int y )
+{
+	if( !IsValid( x, y ) ) return false;
+	else return tiles[x][y]->IsWalkable();
+}
+bool World::IsValid( int x, int y )
+{
+	return x >= 0 && x < grid.GetColumns() && y >= 0 && y < grid.GetRows();
 }

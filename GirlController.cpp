@@ -21,7 +21,19 @@ void GirlController::Update( float dt )
 		UpdateGirl( *it, dt );
 	}
 }
-void GirlController::UpdateGirl( boost::shared_ptr<Girl> girl, float dt )
+void GirlController::UpdateGirl( boost::shared_ptr<Girl> girl, float )
 {
-	Girl::Vision vision = girl->GetVision();
+	const Girl::Vision vision = girl->GetVision();
+	
+//	GridPos pos;
+//	
+//	for( int x = 0; x < vision.size(); ++x ) {
+//		for( int y = 0; y < vision[x].size(); ++y ) {
+//			if( vision[x][y] == VISION_SELF ) {
+//				pos.x = x; pos.y = y;
+//			}
+//		}
+//	}
+	
+	
 }
