@@ -9,12 +9,10 @@ public:
 	void SetPos( Vec2D p ) { pos = p; }
 	Vec2D GetPos() const { return pos; }
 	
-	void MoveTo( Vec2D p ) { target = p; }
-	Vec2D GetTarget() const { return target; }
-	
 	void SetVel( Vec2D v ) { vel = v; }
 	Vec2D GetVel() const { return vel; }
 	
+	void Stop();
 	void MoveLeft();
 	void MoveRight();
 	void MoveUp();
@@ -25,15 +23,28 @@ public:
 	bool WantsUp();
 	bool WantsDown();
 	
+	virtual void FaceLeft() { }
+	virtual void FaceRight() { }
+	virtual void FaceUp() { }
+	virtual void FaceDown() { }
+	
+	virtual float GetSpeed() = 0;
+	
 	bool FacesLeft();
 	bool FacesRight();
 	bool FacesUp();
 	bool FacesDown();
 	
-	void UpdateMovement();
+	void UpdateMovement( float dt );
 protected:
 	Vec2D pos;
-	Vec2D target;
 	
 	Vec2D vel;
+private:
+	void DirFaceLeft();
+	void DirFaceRight();
+	void DirFaceUp();
+	void DirFaceDown();
+	
+	Vec2D face_dir;
 };

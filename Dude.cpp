@@ -19,11 +19,16 @@ Tree::Rect Dude::Bounds() const
 	return Tree::Rect( pos.x + 1, pos.y + 1, 30, 30 );
 }
 
+float Dude::GetSpeed()
+{
+	return 100;
+}
+
 void Dude::Update( float dt )
 {
-	
+	UpdateMovement( dt );
 }
 void Dude::Render()
 {
-	curr_spr->spr->Render( pos.x, pos.y );
+	curr_spr->spr->Render( (int)pos.x, (int)pos.y );
 }

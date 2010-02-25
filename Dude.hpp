@@ -13,6 +13,8 @@ public:
 	Dude( boost::shared_ptr<SpriteLoader> spr_loader );
 	
 	Tree::Rect Bounds() const;
+	
+	float GetSpeed();
 
 	void Update( float dt );
 	void Render();
