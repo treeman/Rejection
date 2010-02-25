@@ -43,12 +43,10 @@ void World::Update( float dt )
 			if( grid.IsWalkable( dude_gpos.x - 1, dude_gpos.y ) &&
 				tile_grid[dude_gpos.x - 1][dude_gpos.y]->Bounds().Intersects( dude->Bounds() ) ) 
 			{
-				L_ << "stopping left at";
 				dude->StopAt( grid.ConvertToScreen( GridPos( dude_gpos.x - 1, dude_gpos.y ) ) );
 			}
 			//else stop it immediatly
 			else {
-				L_ << "stopping left";
 				dude->StopAt( grid.ConvertToScreen( dude_gpos ) );
 			}
 		}
@@ -58,13 +56,9 @@ void World::Update( float dt )
 			if( grid.IsWalkable( dude_gpos.x + 1, dude_gpos.y ) &&
 				tile_grid[dude_gpos.x + 1][dude_gpos.y]->Bounds().Intersects( dude->Bounds() ) ) 
 			{
-				L_ << "stopping right at";
 				dude->StopAt( grid.ConvertToScreen( GridPos( dude_gpos.x + 1, dude_gpos.y ) ) );
 			}
 			else {
-				L_ << "stopping right";
-				L_ << "IsWalkable( " << dude_gpos.x + 1 << ", " << dude_gpos.y << ") =" <<
-					grid.IsWalkable( dude_gpos.x + 1, dude_gpos.y );
 				dude->StopAt( grid.ConvertToScreen( dude_gpos ) );
 			}
 		}
@@ -74,11 +68,9 @@ void World::Update( float dt )
 			if( grid.IsWalkable( dude_gpos.x, dude_gpos.y - 1 ) &&
 				tile_grid[dude_gpos.x][dude_gpos.y - 1]->Bounds().Intersects( dude->Bounds() ) ) 
 			{
-				L_ << "stopping up at";
 				dude->StopAt( grid.ConvertToScreen( GridPos( dude_gpos.x, dude_gpos.y - 1 ) ) );
 			}
 			else {
-				L_ << "stopping up";
 				dude->StopAt( grid.ConvertToScreen( dude_gpos ) );
 			}
 		}
@@ -87,18 +79,16 @@ void World::Update( float dt )
 			if( grid.IsWalkable( dude_gpos.x, dude_gpos.y + 1 ) &&
 				tile_grid[dude_gpos.x][dude_gpos.y + 1]->Bounds().Intersects( dude->Bounds() ) ) 
 			{
-				L_ << "stopping down at";
 				dude->StopAt( grid.ConvertToScreen( GridPos( dude_gpos.x, dude_gpos.y + 1 ) ) );
 			}
 			else {
-				L_ << "stopping down";
 				dude->StopAt( grid.ConvertToScreen( dude_gpos ) );
 			}
 		}
 	}
 	
 	//check and correct dude to the world borders
-	CheckDudeWorldBounds();
+	CheckWorldBounds( dude );
 	
 	for( size_t x = 0; x < tile_grid.size(); ++x ) {
 		for( size_t y = 0; y < tile_grid[x].size(); ++y ) {
@@ -140,29 +130,32 @@ void World::Render()
 		
 		GridPos grid_pos = grid.ConvertToGrid( Vec2D( mx, my ) );
 		Vec2D mpos = grid.ConvertToScreen( grid_pos );
-		fnt->printf( 50, 15, HGETEXT_LEFT, "%i,%i => %f,%f", grid_pos.x, grid_pos.y,
+		fnt->printf( 50, 15, HGETEXT_LEFT, "%i,%i => %.0f,%.0f", grid_pos.x, grid_pos.y,
 			mpos.x, mpos.y );
 	}
 	
 	if( debug_dude->Val() ) {
 		GridPos grid_pos = grid.ConvertToGrid( dude->Bounds().GetCenter() );
 		Vec2D gpos = grid.ConvertToScreen( grid_pos );
-		fnt->printf( 700, 5, HGETEXT_RIGHT, "dude_grid:%i,%i=>%f,%f", grid_pos.x, grid_pos.y,
+		fnt->printf( 750, 5, HGETEXT_RIGHT, "dude_grid:%i,%i=>%.0f,%.0f", grid_pos.x, grid_pos.y,
 			gpos.x, gpos.y );
 	}
 }
 
-void World::CheckDudeWorldBounds()
+void World::CheckWorldBounds( boost::shared_ptr<MovingObject> o )
 {
 	float x1, y1, x2, y2;
 	grid.GetBounds( x1, y1, x2, y2 );
 	
-	const Tree::Rect b = dude->Bounds();
+	const Tree::Rect b(
+		o->GetPos().x,
+		o->GetPos().y,
+		32, 32 );
 	
 	//you just love the magic numbers eh?
-//	if( b.x1 < x1 ) dude->SetXPos( x1 );
-//	if( b.x2 > x2 ) dude->SetXPos( x2 - b.Width() );
-//	
-//	if( b.y1 < y1 ) dude->SetYPos( y1 );
-//	if( b.y2 > y2 ) dude->SetYPos( y2 - b.Height() );
+	if( b.x1 < x1 ) o->SetXPos( x1 );
+	if( b.x2 > x2 ) o->SetXPos( x2 - b.Width() );
+	
+	if( b.y1 < y1 ) o->SetYPos( y1 );
+	if( b.y2 > y2 ) o->SetYPos( y2 - b.Height() );
 }

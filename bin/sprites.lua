@@ -14,6 +14,11 @@ sprites = {
     {   name = "dude_back",
         path = "gfx/objects.png",
         x = box, y = 4 * box, w = box, h = box, },
+        
+    -- girl
+    {   name = "girl_front",
+        path = "gfx/objects.png",
+        x = 2 * box, y = 3 * box, w = box, h = box, },
     
     -- dark grass
     {   name = "darkgrass_lvl1",

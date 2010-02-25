@@ -16,6 +16,8 @@ public:
 	void Update( float dt );
 	void Render();
 private:
+	void CheckWorldBounds( boost::shared_ptr<MovingObject> o );
+	
 	Grid grid;
 	
 	boost::shared_ptr<Dude> dude;
@@ -27,6 +29,4 @@ private:
 	HgeObj hge;
 	
 	boost::shared_ptr<Tree::Dator<bool> > debug_dude;
-	
-	void CheckDudeWorldBounds();
 };

@@ -3,7 +3,14 @@
 MovingObject::MovingObject()
 {
 	wants_stop = stop_set = false;
+	FaceDown();
 }
+
+Tree::Rect MovingObject::Bounds() const
+{
+	return Tree::Rect( pos.x + 1, pos.y + 1, 30, 30 );
+}
+
 void MovingObject::StopAt( Vec2D target )
 {
 	stop_pos = target;

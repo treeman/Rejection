@@ -19,14 +19,26 @@ Dude::Dude( boost::shared_ptr<SpriteLoader> spr_loader )
 	SETTINGS->RegisterVariable( "dude_debug", boost::weak_ptr<Tree::BaseDator>( debug_dude ) );
 }
 
-Tree::Rect Dude::Bounds() const
-{
-	return Tree::Rect( pos.x + 1, pos.y + 1, 30, 30 );
-}
-
 float Dude::GetSpeed()
 {
 	return 200;
+}
+
+void Dude::FaceLeft()
+{
+	curr_spr = spr_map["dude_left"];
+}
+void Dude::FaceRight()
+{
+	curr_spr = spr_map["dude_right"];
+}
+void Dude::FaceUp()
+{
+	curr_spr = spr_map["dude_back"];
+}
+void Dude::FaceDown()
+{
+	curr_spr = spr_map["dude_front"];
 }
 
 void Dude::Update( float dt )

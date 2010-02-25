@@ -9,9 +9,9 @@
 #include "Sprite.hpp"
 #include "MovingObject.hpp"
 
-class Dude : public MovingObject {
+class Girl : public MovingObject {
 public:
-	Dude( boost::shared_ptr<SpriteLoader> spr_loader );
+	Girl( boost::shared_ptr<SpriteLoader> spr_loader );
 	
 	float GetSpeed();
 	
@@ -27,6 +27,6 @@ private:
 	SpriteMap spr_map;
 	boost::shared_ptr<Sprite> curr_spr;
 	
-	boost::shared_ptr<Tree::Dator<bool> > debug_dude;
+	boost::shared_ptr<Tree::Dator<bool> > debug_girl;
 	boost::shared_ptr<hgeFont> fnt;
 };

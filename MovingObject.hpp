@@ -1,11 +1,14 @@
 #pragma once
 
 #include "Tree/Vec2D.hpp"
+#include "Tree/Rect.hpp"
 
 class MovingObject {
 public:
 	MovingObject();
 	virtual ~MovingObject() { }
+	
+	virtual Tree::Rect Bounds() const;
 	
 	void SetPos( Vec2D p ) { pos = p; }
 	void SetXPos( float x ) { pos.x = x; }

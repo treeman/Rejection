@@ -2,7 +2,7 @@
 
 GrassTile::GrassTile( Vec2D pos ) : Tile( pos )
 {
-	timer = 0;
+	timer = 10;
 }
 
 void GrassTile::WalkOver()
@@ -32,7 +32,7 @@ DarkGrassTile::DarkGrassTile( Vec2D pos, boost::shared_ptr<SpriteLoader> spr_loa
 	lvl1_spr = spr_loader->Get( "darkgrass_lvl1" );
 	lvl2_spr = spr_loader->Get( "darkgrass_lvl2" );
 	lvl3_spr = spr_loader->Get( "darkgrass_lvl3" );
-	curr_spr = lvl1_spr;
+	curr_spr = lvl3_spr;
 }
 
 LightGrassTile::LightGrassTile( Vec2D pos, boost::shared_ptr<SpriteLoader> spr_loader ) : GrassTile( pos )
@@ -40,5 +40,5 @@ LightGrassTile::LightGrassTile( Vec2D pos, boost::shared_ptr<SpriteLoader> spr_l
 	lvl1_spr = spr_loader->Get( "lightgrass_lvl1" );
 	lvl2_spr = spr_loader->Get( "lightgrass_lvl2" );
 	lvl3_spr = spr_loader->Get( "lightgrass_lvl3" );
-	curr_spr = lvl1_spr;
+	curr_spr = lvl3_spr;
 }
