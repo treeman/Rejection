@@ -29,7 +29,13 @@ private:
 	boost::shared_ptr<Dude> dude;
 	boost::shared_ptr<hgeFont> fnt;
 	
-	boost::shared_ptr<Girl> girl;
+	void SpawnGirl();
+	void KillGirl( boost::shared_ptr<Girl> girl );
+	
+	boost::shared_ptr<SpriteLoader> spr_loader;
+	
+	typedef std::vector<boost::shared_ptr<Girl> > Girls;
+	Girls girls;
 	boost::shared_ptr<GirlController> girl_controller;
 	
 	boost::shared_ptr<Tree::Dator<bool> > show_mouse_grid;

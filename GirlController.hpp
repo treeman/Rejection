@@ -6,10 +6,17 @@ class Girl;
 
 class GirlController : public Controller {
 public:
-	GirlController( boost::shared_ptr<Girl> girl );
+	GirlController();
+	
+	void Attach( boost::shared_ptr<Girl> girl );
+	void Detach( boost::shared_ptr<Girl> girl );
 	
 	void Update( float dt );
 private:
-	boost::shared_ptr<Girl> girl;
+	void UpdateGirl( boost::shared_ptr<Girl> girl, float dt );
+
+	typedef std::vector<boost::shared_ptr<Girl> > Girls;
+	Girls girls;
+	
 	HgeObj hge;
 };

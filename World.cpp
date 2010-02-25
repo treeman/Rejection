@@ -3,14 +3,15 @@
 #include <boost/foreach.hpp>
 #include "Tree/Log.hpp"
 
-World::World( boost::shared_ptr<SpriteLoader> spr_loader ) : grid( 32, 32, 23, 32, 32, 17, spr_loader )
+World::World( boost::shared_ptr<SpriteLoader> _spr_loader ) : grid( 32, 32, 23, 32, 32, 17, _spr_loader ),
+	spr_loader( _spr_loader )
 {
 	dude.reset( new Dude( spr_loader ) );
 	dude->SetPos( grid.ConvertToScreen( GridPos( 5, 0 ) ) );
 	
-	girl.reset( new Girl( spr_loader ) );
-	girl->SetPos( grid.ConvertToScreen( GridPos( 10, 10 ) ) );
-	girl_controller.reset( new GirlController( girl ) );
+	girl_controller.reset( new GirlController() );
+	
+	SpawnGirl();
 	
 	fnt.reset( new hgeFont( "fnt/arial10.fnt" ) );
 	
@@ -31,7 +32,11 @@ boost::shared_ptr<Dude> World::GetDude()
 
 void World::Update( float dt )
 {
-	UpdatePerson( girl, dt );
+	girl_controller->Update( dt );
+	
+	BOOST_FOREACH( boost::shared_ptr<Girl> girl, girls ) {
+		UpdatePerson( girl, dt );
+	}
 	UpdatePerson( dude, dt );
 	
 	Grid::TileGrid tile_grid = grid.GetTiles();
@@ -39,10 +44,17 @@ void World::Update( float dt )
 		for( size_t y = 0; y < tile_grid[x].size(); ++y ) {
 			const Grid::TilePtr tile = tile_grid[x][y];
 			
-			if( dude->Bounds().Intersects( tile->Bounds() )
-				|| girl->Bounds().Intersects( tile->Bounds() ) )
+			if( dude->Bounds().Intersects( tile->Bounds() ) )
 			{
 				tile->WalkOver();
+			}
+			else {
+				BOOST_FOREACH( boost::shared_ptr<Girl> girl, girls ) {
+					if( girl->Bounds().Intersects( tile->Bounds() ) )
+					{
+						tile->WalkOver();
+					}
+				}
 			}
 			tile->Update( dt );
 		}
@@ -65,7 +77,9 @@ void World::Render()
 		}
 	}
 	
-	RenderPerson( girl );
+	BOOST_FOREACH( boost::shared_ptr<Girl> girl, girls ) {
+		RenderPerson( girl );
+	}
 	RenderPerson( dude );
 	
 	if( show_bounds->Val() ) {
@@ -175,4 +189,18 @@ void World::CheckWorldBounds( boost::shared_ptr<MovingObject> o )
 	
 	if( b.y1 < y1 ) o->SetYPos( y1 );
 	if( b.y2 > y2 ) o->SetYPos( y2 - b.Height() );
+}
+
+void World::SpawnGirl()
+{
+	boost::shared_ptr<Girl> girl( new Girl( spr_loader ) );
+	girl->SetPos( grid.ConvertToScreen( GridPos( 10, 10 ) ) );
+	girl_controller->Attach( girl );
+	
+	girls.push_back( girl );
+}
+void World::KillGirl( boost::shared_ptr<Girl> girl )
+{
+	girl_controller->Detach( girl );
+	std::remove( girls.begin(), girls.end(), girl );
 }
