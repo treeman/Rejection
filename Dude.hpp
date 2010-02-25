@@ -7,9 +7,9 @@
 #include "Tree/Settings.hpp"
 #include "Tree/Dator.hpp"
 #include "Sprite.hpp"
-#include "MovingObject.hpp"
+#include "Person.hpp"
 
-class Dude : public MovingObject {
+class Dude : public Person {
 public:
 	Dude( boost::shared_ptr<SpriteLoader> spr_loader );
 	
