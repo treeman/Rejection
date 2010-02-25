@@ -26,7 +26,7 @@ Tree::Rect Dude::Bounds() const
 
 float Dude::GetSpeed()
 {
-	return 100;
+	return 200;
 }
 
 void Dude::Update( float dt )
@@ -45,7 +45,9 @@ void Dude::Render()
 		else if( Vec2D::up == face_dir ) face = "up";
 		else if( Vec2D::down == face_dir ) face = "down";
 		
-		fnt->printf( 140, 5, HGETEXT_LEFT, "dude: p:%.0f,%.0f v:%.0f,%.0f stop:%i stop_set:%i stop_pos:%.0f,%.0f face:%s",
-			pos.x, pos.y, vel.x, vel.y, wants_stop, stop_set, stop_pos.x, stop_pos.y, face.c_str() );
+		fnt->printf( 140, 5, HGETEXT_LEFT, "dude: p:%.0f,%.0f v:%.0f,%.0f stop:%i stop_set:%i stop_pos:%.0f,%.0f face:%s l:%i r%i u%i d%i",
+			pos.x, pos.y, vel.x, vel.y, wants_stop, stop_set, stop_pos.x, stop_pos.y, face.c_str(),
+			WantsLeft(), WantsRight(), WantsUp(), WantsDown()
+		);
 	}
 }

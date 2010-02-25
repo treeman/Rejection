@@ -26,7 +26,9 @@ public:
 	int GetColumns() { return columns; }
 	int GetRows() { return rows; }
 	
-	bool IsWalkAble( int x, int y );
+	bool IsWalkable( int x, int y );
+	
+	void GetBounds( float &x1, float &y1, float &x2, float &y2 ); 
 	
 	typedef boost::shared_ptr<Tile> TilePtr;
 	typedef std::vector<TilePtr> Tiles;

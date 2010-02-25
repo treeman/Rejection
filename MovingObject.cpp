@@ -63,7 +63,7 @@ bool MovingObject::IsMoving()
 }
 bool MovingObject::WantsStop()
 {
-	return wants_stop;
+	return wants_stop && !stop_set;
 }
 bool MovingObject::WantsLeft()
 {
@@ -102,7 +102,7 @@ bool MovingObject::FacesDown()
 void MovingObject::UpdateMovement( float dt )
 {
 	pos += vel * dt;
-	if( stop_set ) {
+	if( wants_stop && stop_set ) {
 		if( WantsLeft() && pos.x < stop_pos.x ) {
 			ForceStop();
 		}
