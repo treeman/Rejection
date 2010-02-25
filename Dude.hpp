@@ -24,4 +24,7 @@ private:
 	typedef std::map<std::string, boost::shared_ptr<Sprite> > SpriteMap;
 	SpriteMap spr_map;
 	boost::shared_ptr<Sprite> curr_spr;
+	
+	boost::shared_ptr<Tree::Dator<bool> > debug_dude;
+	boost::shared_ptr<hgeFont> fnt;
 };

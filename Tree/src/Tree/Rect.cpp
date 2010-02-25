@@ -38,3 +38,8 @@ bool Rect::Intersects( const Rect &rect ) const
 	
 	return min_x < max_x && min_y < max_y;
 }
+
+Vec2D Rect::GetCenter() const
+{
+	return Vec2D( x1 + ( x2 - x1 ) / 2, y1 + ( y2 - y1 ) / 2 );
+}

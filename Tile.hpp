@@ -22,6 +22,7 @@ public:
 	void Detach();
 	
 	virtual void WalkOver() { }
+	virtual bool IsWalkable() { return true; }
 	
 	void SetPos( Vec2D p ) { pos = p; }
 	Vec2D GetPos() const { return pos; }

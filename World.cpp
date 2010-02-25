@@ -1,6 +1,7 @@
 #include "World.hpp"
 
 #include <boost/foreach.hpp>
+#include "Tree/Log.hpp"
 
 World::World( boost::shared_ptr<SpriteLoader> spr_loader ) : grid( 32, 32, 23, 32, 32, 17, spr_loader )
 {
@@ -14,6 +15,9 @@ World::World( boost::shared_ptr<SpriteLoader> spr_loader ) : grid( 32, 32, 23, 3
 	
 	show_bounds.reset( new Tree::Dator<bool>( false ) );
 	SETTINGS->RegisterVariable( "bounds_show", boost::weak_ptr<Tree::BaseDator>( show_bounds ) );
+	
+	debug_dude.reset( new Tree::Dator<bool>( false ) );
+	SETTINGS->RegisterVariable( "dude_debug", boost::weak_ptr<Tree::BaseDator>( debug_dude ) );
 }
 
 boost::shared_ptr<Dude> World::GetDude()
@@ -27,10 +31,27 @@ void World::Update( float dt )
 	
 	Grid::TileGrid tile_grid = grid.GetTiles();
 	
+//	if( dude->WantsLeft() || dude->WantsRight() ) {
+////		ConstrainDudeY();
+//	}
+//	else if( dude->WantsUp() || dude->WantsDown() ) {
+////		ConstrainDudeX();
+//	}
+//	else {
+////		ConstrainDudeTile();
+//	}
+	
+	const GridPos dude_gpos = grid.ConvertToGrid( dude->GetPos() );
+	GridPos dude_next_pos;
+	if( dude->WantsLeft() ) { dude_next_pos = GridPos( dude_gpos.x - 1, dude_gpos.y ); }
+	else if( dude->WantsRight() ) { dude_next_pos = GridPos( dude_gpos.x + 1, dude_gpos.y ); }
+	else if( dude->WantsUp() ) { dude_next_pos = GridPos( dude_gpos.x, dude_gpos.y - 1 ); }
+	else if( dude->WantsDown() ) { dude_next_pos = GridPos( dude_gpos.x, dude_gpos.y + 1 ); }
+	
 	if( dude->WantsStop() ) {
 		
 		//a grid pos will be a valid array index
-		const GridPos dude_gpos = grid.ConvertToGrid( dude->GetPos() );
+		
 		if( dude->WantsLeft() ) 
 		{
 			//checks if the tile to the left isn't empty (dude is to the far left) and
@@ -125,4 +146,39 @@ void World::Render()
 		GridPos grid_pos = grid.ConvertToGrid( Vec2D( mx, my ) );
 		fnt->printf( 100, 5, HGETEXT_LEFT, "%i, %i", grid_pos.x, grid_pos.y );
 	}
+	
+	if( debug_dude->Val() ) {
+		GridPos grid_pos = grid.ConvertToGrid( dude->Bounds().GetCenter() );
+		fnt->printf( 460, 5, HGETEXT_LEFT, "dude_grid:%i,%i", grid_pos.x, grid_pos.y );
+	}
+}
+
+void World::ConstrainDudeX()
+{
+	const Vec2D pos = dude->Bounds().GetCenter();
+	const GridPos dude_gpos = grid.ConvertToGrid( pos );
+	const Vec2D new_pos = Vec2D( grid.ConvertXToScreen( dude_gpos.x ), pos.y );
+	dude->SetPos( new_pos );
+	dude->SetXVel( 0 );
+	L_ << "constraining x pos:" << pos.x << "," << pos.y;
+	L_ << "gpos:" << dude_gpos.x << "," << dude_gpos.y;
+	L_<< "new:" << new_pos.x << "," << new_pos.y;
+}
+void World::ConstrainDudeY()
+{
+	const Vec2D pos = dude->Bounds().GetCenter();
+	const GridPos dude_gpos = grid.ConvertToGrid( pos );
+	const Vec2D new_pos = Vec2D( pos.x, grid.ConvertYToScreen( dude_gpos.y ) );
+	dude->SetPos( new_pos );
+	dude->SetYVel( 0 );
+	L_<< "constraining y pos:" << pos.x << "," << pos.y;
+	L_<< "gpos:" << dude_gpos.x << "," << dude_gpos.y;
+	L_<< "new:" << new_pos.x << "," << new_pos.y;
+}
+void World::ConstrainDudeTile()
+{
+	const Vec2D pos = dude->Bounds().GetCenter();
+	const GridPos dude_gpos = grid.ConvertToGrid( pos );
+	const Vec2D new_pos = Vec2D( grid.ConvertToScreen( dude_gpos ) );
+	dude->SetPos( new_pos );
 }

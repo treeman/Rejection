@@ -26,11 +26,15 @@ public:
 	int GetColumns() { return columns; }
 	int GetRows() { return rows; }
 	
+	bool IsWalkAble( int x, int y );
+	
 	typedef boost::shared_ptr<Tile> TilePtr;
 	typedef std::vector<TilePtr> Tiles;
 	typedef std::vector<Tiles> TileGrid;
 	
 	TileGrid &GetTiles() { return tiles; }
+	
+	bool IsValid( int x, int y );
 private:
 	int x, y;
 	int box_w, box_h;

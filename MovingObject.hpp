@@ -8,6 +8,8 @@ public:
 	virtual ~MovingObject() { }
 	
 	void SetPos( Vec2D p ) { pos = p; }
+	void SetXPos( float x ) { pos.x = x; }
+	void SetYPos( float y ) { pos.y = y; }
 	Vec2D GetPos() const { return pos; }
 	
 	void SetVel( Vec2D v ) { vel = v; }
@@ -23,6 +25,7 @@ public:
 	void MoveUp();
 	void MoveDown();
 	
+	bool IsMoving();
 	bool WantsStop();
 	bool WantsLeft();
 	bool WantsRight();
@@ -49,7 +52,7 @@ protected:
 	bool wants_stop;
 	bool stop_set;
 	Vec2D stop_pos;
-private:
+
 	void DirFaceLeft();
 	void DirFaceRight();
 	void DirFaceUp();
@@ -57,5 +60,6 @@ private:
 	
 	void ForceStop();
 	
+//	Vec2D next_vel;
 	Vec2D face_dir;
 };

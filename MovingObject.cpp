@@ -15,23 +15,39 @@ void MovingObject::MoveStop()
 }
 void MovingObject::MoveLeft()
 {
-	vel.x = -GetSpeed(); vel.y = 0;
-	DirFaceLeft();
+	if( !IsMoving() ) {
+		vel.x = -GetSpeed(); vel.y = 0;
+		DirFaceLeft();
+		wants_stop = false;
+	}
 }
 void MovingObject::MoveRight()
 {
-	vel.x = GetSpeed(); vel.y = 0;
-	DirFaceRight();
+	if( !IsMoving() ) {
+		vel.x = GetSpeed(); vel.y = 0;
+		DirFaceRight();
+		wants_stop = false;
+	}
 }
 void MovingObject::MoveUp()
 {
-	vel.x = 0; vel.y = -GetSpeed();
-	DirFaceUp();
+	if( !IsMoving() ) {
+		vel.x = 0; vel.y = -GetSpeed();
+		DirFaceUp();
+		wants_stop = false;
+	}
 }
 void MovingObject::MoveDown()
 {
-	vel.x = 0; vel.y = GetSpeed();
-	DirFaceDown();
+	if( !IsMoving() ) {
+		vel.x = 0; vel.y = GetSpeed();
+		DirFaceDown();
+		wants_stop = false;
+	}
+}
+bool MovingObject::IsMoving()
+{
+	return vel.x != 0 || vel.y != 0;
 }
 bool MovingObject::WantsStop()
 {
@@ -115,4 +131,5 @@ void MovingObject::ForceStop()
 {
 	wants_stop = stop_set = false;
 	pos = stop_pos;
+	vel = Vec2D::zero;
 }

@@ -18,6 +18,8 @@ namespace Tree
 		
 		float Width() const { return x2 - x1; }
 		float Height() const { return y2 - y1; }
+		
+		Vec2D GetCenter() const;
 	
 		float x1, y1, x2, y2;
 	};

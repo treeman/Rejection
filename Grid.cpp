@@ -41,3 +41,14 @@ GridPos Grid::ConvertToGrid( Vec2D p )
 		math::clip( (int)(( p.y - y ) / box_h), 0, rows - 1 )
 	);
 }
+
+bool Grid::IsWalkAble( int x, int y )
+{
+	if( !IsValid( x, y ) ) return false;
+	else return tiles[x][y]->IsWalkable();
+}
+
+bool Grid::IsValid( int x, int y )
+{
+	return x < 0 || x > columns - 1 || y < 0 || y > rows - 1;
+}
