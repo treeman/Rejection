@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include "MovingObject.hpp"
 
 enum VisionObject {
@@ -12,11 +14,12 @@ enum VisionObject {
 
 class Person : public MovingObject {
 public:
+	Person();
 	virtual ~Person() { }
 	
 	typedef std::vector<std::vector<int> > Vision;
-	void SetVision( Vision v ) { vision = v; }
-	Vision GetVision() { return vision; }
+	void SetVision( Vision v );
+	Vision GetVision();
 	
 	virtual void Update( float dt ) = 0;
 	virtual void Render() = 0;

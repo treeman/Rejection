@@ -44,7 +44,14 @@ private:
 	typedef std::vector<Tiles> TileGrid;
 	
 	void InitTiles( boost::shared_ptr<SpriteLoader> spr_loader );
+	
+	bool IsWalkable( GridPos p ) { IsWalkable( p.x, p.y ); }
 	bool IsWalkable( int x, int y );
+	
+	bool IsSeeThrough( GridPos p ) { IsSeeThrough( p.x, p.y ); }
+	bool IsSeeThrough( int x, int y );
+	
+	bool IsValid( GridPos p ) { IsValid( p.x, p.y ); }
 	bool IsValid( int x, int y );
 	
 	TileGrid tiles;

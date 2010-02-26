@@ -165,7 +165,50 @@ void World::UpdatePerson( boost::shared_ptr<Person> o, float dt )
 		}
 	}
 	
-	CheckWorldBounds( dude );
+	CheckWorldBounds( o );
+	
+	Person::Vision vision = o->GetVision();
+	const GridPos self_pos( vision.size() / 2, vision[0].size() / 2 );
+	const GridPos dude_pos = grid.ConvertToGrid( dude->Bounds().GetCenter() );
+	
+//	L_ << "person updating stuff:";
+//	L_ << "self_pos: " << self_pos.x << "," << self_pos.y;
+//	L_ << "dude_pos: " << dude_pos.x << "," << dude_pos.y;
+//	L_ << "grid_pos: " << grid_pos.x << "," << grid_pos.y;
+	
+	for( int y = 0; y < vision.size(); ++y ) {
+		for( int x = 0; x < vision[y].size(); ++x ) {
+			
+			if( self_pos.x == x && self_pos.y == y ) {
+				vision[x][y] = VISION_SELF;
+//				L_ << "self found! :D";
+				continue;
+			}
+			
+			const GridPos rel_grid_pos( 
+				grid_pos.x - self_pos.x + x,
+				grid_pos.y - self_pos.y + y
+			);
+			
+//			L_ << "rel_grid_pos: " << rel_grid_pos.x << "," << rel_grid_pos.y;
+			
+			if( dude_pos == rel_grid_pos ) { 
+				vision[x][y] = VISION_DUDE; 
+			}
+			else if( IsSeeThrough( rel_grid_pos ) ) {
+//				L_ << "oh it's free alright!";
+				vision[x][y] = VISION_FREE; 
+			}
+			else if( !IsValid( rel_grid_pos ) ) { 
+				vision[x][y] = VISION_INVALID; 
+			}
+			else {
+				vision[x][y] = VISION_OBSUCRED;
+			}
+		}
+	}
+	
+	o->SetVision( vision );
 }
 
 void World::RenderPerson( boost::shared_ptr<Person> o )
@@ -193,7 +236,7 @@ void World::CheckWorldBounds( boost::shared_ptr<MovingObject> o )
 void World::SpawnGirl()
 {
 	boost::shared_ptr<Girl> girl( new Girl( spr_loader ) );
-	girl->SetPos( grid.ConvertToScreen( GridPos( 10, 10 ) ) );
+	girl->SetPos( grid.ConvertToScreen( GridPos( 10, 5 ) ) );
 	girl_controller->Attach( girl );
 	
 	girls.push_back( girl );
@@ -226,6 +269,13 @@ bool World::IsWalkable( int x, int y )
 {
 	if( !IsValid( x, y ) ) return false;
 	else return tiles[x][y]->IsWalkable();
+}
+bool World::IsSeeThrough( int x, int y )
+{
+	if( !IsValid( x, y ) ) return false;
+	else {
+		return tiles[x][y]->IsSeeThrough();
+	}
 }
 bool World::IsValid( int x, int y )
 {

@@ -3,7 +3,7 @@
 MovingObject::MovingObject()
 {
 	wants_stop = stop_set = false;
-	FaceDown();
+	DirFaceDown();
 }
 
 Tree::Rect MovingObject::Bounds() const

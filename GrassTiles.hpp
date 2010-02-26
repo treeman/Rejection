@@ -10,6 +10,7 @@ public:
 	virtual ~GrassTile() { }
 	
 	void WalkOver();
+	bool IsSeeThrough();
 	
 	void Update( float dt );
 	void Render();

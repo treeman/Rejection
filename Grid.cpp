@@ -6,20 +6,20 @@ Grid::Grid( int _x, int  _box_w, int _columns, int  _y, int  _box_h, int _rows )
 	
 }
 
-float Grid::ConvertXToScreen( int x_pos )
+float Grid::ConvertXToScreen( int x_pos ) const
 {
 	return x + x_pos * box_w;
 }
-float Grid::ConvertYToScreen( int y_pos )
+float Grid::ConvertYToScreen( int y_pos ) const
 {
 	return y + y_pos * box_h;
 }
 	
-Vec2D Grid::ConvertToScreen( GridPos p )
+Vec2D Grid::ConvertToScreen( GridPos p ) const
 {
 	return Vec2D( x + p.x * box_w, y + p.y * box_h );
 }
-GridPos Grid::ConvertToGrid( Vec2D p )
+GridPos Grid::ConvertToGrid( Vec2D p ) const
 {
 	return GridPos( 
 		math::clip( (int)(( p.x - x ) / box_w), 0, columns - 1 ), 
@@ -27,7 +27,7 @@ GridPos Grid::ConvertToGrid( Vec2D p )
 	);
 }
 
-void Grid::GetBounds( float &x1, float &y1, float &x2, float &y2 )
+void Grid::GetBounds( float &x1, float &y1, float &x2, float &y2 ) const
 {
 	x1 = x; y1 = y;
 	x2 = x + columns * box_w;

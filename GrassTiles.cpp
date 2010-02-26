@@ -1,4 +1,5 @@
 #include "GrassTiles.hpp"
+#include "Tree/Log.hpp"
 
 GrassTile::GrassTile( Vec2D pos ) : Tile( pos )
 {
@@ -8,6 +9,10 @@ GrassTile::GrassTile( Vec2D pos ) : Tile( pos )
 void GrassTile::WalkOver()
 {
 	timer = 0;
+}
+bool GrassTile::IsSeeThrough()
+{
+	return timer <= 5.0;
 }
 
 void GrassTile::Update( float dt )

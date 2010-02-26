@@ -1,6 +1,9 @@
 #pragma once
 
 #include "Controller.hpp"
+#include "Grid.hpp"
+#include "Person.hpp"
+#include "Tree/Timer.hpp"
 
 class Girl;
 
@@ -18,5 +21,9 @@ private:
 	typedef std::vector<boost::shared_ptr<Girl> > Girls;
 	Girls girls;
 	
+	void IsValid( int x, int y, Person::Vision vision );
+	
 	HgeObj hge;
+	
+	Tree::Timer print_vision_t;
 };

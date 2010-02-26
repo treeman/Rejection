@@ -23,6 +23,7 @@ public:
 	
 	virtual void WalkOver() { }
 	virtual bool IsWalkable() { return true; }
+	virtual bool IsSeeThrough() { return true; };
 	
 	void SetPos( Vec2D p ) { pos = p; }
 	Vec2D GetPos() const { return pos; }
