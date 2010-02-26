@@ -6,7 +6,7 @@ Person::Person()
 	
 	vision.resize( vision_size );
 	for( int n = 0; n < vision_size; ++n ) {
-		vision[n].resize( vision_size, VISION_FREE );
+		vision[n].resize( vision_size, VISION_OBSUCRED );
 	}
 	vision[vision_size / 2][vision_size / 2] = VISION_SELF;
 }

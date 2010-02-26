@@ -21,7 +21,18 @@ private:
 	typedef std::vector<boost::shared_ptr<Girl> > Girls;
 	Girls girls;
 	
-	void IsValid( int x, int y, Person::Vision vision );
+	bool IsValid( int x, int y, Person::Vision vision );
+	bool IsDudeVisible( GridPos &pos, Person::Vision vision );
+	bool IsClearPath( Vec2D &dir, boost::shared_ptr<Girl> girl );
+	bool IsFree( int x, int y, Person::Vision vision );
+	
+	//hilarious
+	//but necessery to avoid a lot of "is girl already moving right?"
+	//questions
+	void MoveLeft( boost::shared_ptr<Girl> girl );
+	void MoveRight( boost::shared_ptr<Girl> girl );
+	void MoveUp( boost::shared_ptr<Girl> girl );
+	void MoveDown( boost::shared_ptr<Girl> girl );
 	
 	HgeObj hge;
 	
