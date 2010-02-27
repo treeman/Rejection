@@ -23,13 +23,22 @@ public:
 	void StopAt( Vec2D stop_pos );
 	
 	void MoveStop();
+	
 	void MoveLeft();
 	void MoveRight();
 	void MoveUp();
 	void MoveDown();
 	
+	void MoveOneLeft();
+	void MoveOneRight();
+	void MoveOneUp();
+	void MoveOneDown();
+	
 	bool IsMoving();
+	
 	bool WantsStop();
+	bool WantsStopNext();
+	
 	bool WantsLeft();
 	bool WantsRight();
 	bool WantsUp();
@@ -53,6 +62,7 @@ protected:
 	Vec2D vel;
 	
 	bool wants_stop;
+	bool wants_stop_next;
 	bool stop_set;
 	Vec2D stop_pos;
 

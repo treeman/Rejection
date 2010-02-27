@@ -2,7 +2,7 @@
 
 MovingObject::MovingObject()
 {
-	wants_stop = stop_set = false;
+	wants_stop = wants_stop_next = stop_set = false;
 	DirFaceDown();
 }
 
@@ -64,6 +64,26 @@ void MovingObject::MoveDown()
 		NextDown();
 	}
 }
+void MovingObject::MoveOneLeft()
+{
+	wants_stop_next = true;
+	MoveLeft();
+}
+void MovingObject::MoveOneRight()
+{
+	wants_stop_next = true;
+	MoveRight();
+}
+void MovingObject::MoveOneUp()
+{
+	wants_stop_next = true;
+	MoveUp();
+}
+void MovingObject::MoveOneDown()
+{
+	wants_stop_next = true;
+	MoveDown();
+}
 bool MovingObject::IsMoving()
 {
 	return vel.x != 0 || vel.y != 0;
@@ -71,6 +91,10 @@ bool MovingObject::IsMoving()
 bool MovingObject::WantsStop()
 {
 	return wants_stop && !stop_set;
+}
+bool MovingObject::WantsStopNext()
+{
+	return wants_stop_next && !stop_set;
 }
 bool MovingObject::WantsLeft()
 {
@@ -148,7 +172,7 @@ void MovingObject::DirFaceDown()
 
 void MovingObject::ForceStop()
 {
-	wants_stop = stop_set = false;
+	wants_stop = wants_stop_next = stop_set = false;
 	pos = stop_pos;
 	vel = Vec2D::zero;
 	if( next_move != Vec2D::zero ) {

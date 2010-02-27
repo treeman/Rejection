@@ -32,7 +32,7 @@ void GirlController::UpdateGirl( boost::shared_ptr<Girl> girl, float )
 	GridPos my_pos( vision.size() / 2, vision[0].size() / 2 );
 	
 	//kill the spambot!! :@
-	if( print_vision_t.GetTime() > 1.0 ) {
+	if( print_vision_t.GetTime() > 2.0 ) {
 		//print a nice debug view of the girls vision
 		std::string vision_string = "girl vision:\n";
 		for( int y = 0; y < vision.size(); ++y ) {
@@ -50,6 +50,11 @@ void GirlController::UpdateGirl( boost::shared_ptr<Girl> girl, float )
 		L_ << vision_string;
 		print_vision_t.Restart();
 	}
+	
+//	if( girl->WantsStop() ) {
+//		L_ << "girl wants to stop!!";
+//	}
+//	girl->MoveStop();
 	
 	GridPos dude_pos;
 	if( IsDudeVisible( dude_pos, vision ) ) {
