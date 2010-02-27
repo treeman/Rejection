@@ -5,12 +5,12 @@ Tile::Tile( Vec2D p ) : pos( p )
 	
 }
 
-boost::shared_ptr<Attachable> Tile::Attachment()
+boost::shared_ptr<TileObject> Tile::Attachment()
 {
 	return attachment;
 }
 
-bool Tile::Attach( boost::shared_ptr<Attachable> a )
+bool Tile::Attach( boost::shared_ptr<TileObject> a )
 {
 	if( attachment ) {
 		attachment = a;

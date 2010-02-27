@@ -3,8 +3,6 @@
 
 Girl::Girl( boost::shared_ptr<SpriteLoader> spr_loader )
 {
-	spr_loader->Load( "sprites.lua" );
-	
 	curr_spr = spr_loader->Get( "girl_front" );
 	spr_map[ "girl_front" ] = curr_spr;
 	

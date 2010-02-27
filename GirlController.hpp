@@ -25,6 +25,7 @@ private:
 	bool IsDudeVisible( GridPos &pos, Person::Vision vision );
 	bool IsClearPath( Vec2D &dir, boost::shared_ptr<Girl> girl );
 	bool IsFree( int x, int y, Person::Vision vision );
+	
 	Vec2D RandomDir( Person::Vision vision );
 	
 	//hilarious
@@ -35,6 +36,8 @@ private:
 	void MoveRight( boost::shared_ptr<Girl> girl );
 	void MoveUp( boost::shared_ptr<Girl> girl );
 	void MoveDown( boost::shared_ptr<Girl> girl );
+	
+//	typedef Tree::ShuffleBag<Vec2D> RandomDirs;
 	
 	HgeObj hge;
 	
