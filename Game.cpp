@@ -1,6 +1,7 @@
 #include "Game.hpp"
 #include "Tree/Game.hpp"
 #include "Tree/Log.hpp"
+#include "Tweaks.hpp"
 
 #include <boost/foreach.hpp>
 
@@ -9,6 +10,11 @@ Game::Game() : spr_loader( new SpriteLoader() )
 	spr_loader->Load( "sprites.lua" );
 	world.reset( new World( spr_loader ) );
 	dude_controller.reset( new DudeController( world->GetDude() ) );
+}
+Game::~Game()
+{
+	//destroy tweaks
+	Tweaks::Instance()-> Destroy();
 }
 	
 bool Game::HandleEvent( hgeInputEvent &event )

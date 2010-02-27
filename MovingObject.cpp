@@ -3,6 +3,7 @@
 MovingObject::MovingObject()
 {
 	wants_stop = stop_set = false;
+	is_paused = false;
 	DirFaceDown();
 	last_move.Start();
 }
@@ -100,6 +101,23 @@ float MovingObject::LastMove()
 	return last_move.GetTime();
 }
 
+void MovingObject::Pause( float time )
+{
+	is_paused = true;
+	pause_time = time;
+	pause_timer.Restart();
+	GetPaused();
+}
+void MovingObject::Unpause()
+{
+	is_paused = false;
+	GetUnpaused();
+}
+bool MovingObject::IsPaused()
+{
+	return is_paused;
+}
+
 bool MovingObject::FacesLeft()
 {
 	return Vec2D::left == face_dir;
@@ -120,6 +138,9 @@ bool MovingObject::FacesDown()
 void MovingObject::UpdateMovement( float dt )
 {
 	pos += vel * dt;
+	if( is_paused && pause_timer.GetTime() > pause_time ) {
+		Unpause();
+	}
 	if( wants_stop && stop_set ) {
 		if( WantsLeft() && pos.x < stop_pos.x ) {
 			ForceStop();

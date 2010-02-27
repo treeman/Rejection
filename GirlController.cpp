@@ -72,7 +72,7 @@ void GirlController::UpdateGirl( boost::shared_ptr<Girl> girl, float )
 	}
 	
 	//if we see nothing choose a random direction
-	if( !girl->IsMoving() && girl->LastMove() > 1.0 ) {
+	if( !girl->IsMoving() && !girl->IsPaused() ) {
 		Vec2D dir = RandomDir( vision );
 		if( dir == Vec2D::left ) MoveLeft( girl );
 		else if( dir == Vec2D::right ) MoveRight( girl );
@@ -84,6 +84,7 @@ void GirlController::UpdateGirl( boost::shared_ptr<Girl> girl, float )
 	//stop so she can think ^^
 	if( girl->LastMove() > 1.5 ) {
 		MoveStop( girl );
+		girl->Pause( math::frandom( 0.7, 1.3 ) );
 	}
 }
 

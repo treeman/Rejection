@@ -14,7 +14,9 @@ World::World( boost::shared_ptr<SpriteLoader> _spr_loader ) : grid( 32, 32, 23, 
 	
 	girl_controller.reset( new GirlController() );
 	
-	SpawnGirl();
+	for( int n = 0; n < 5; ++n ) {
+		SpawnGirl();
+	}
 	
 	fnt.reset( new hgeFont( "fnt/arial10.fnt" ) );
 	
@@ -236,7 +238,9 @@ void World::CheckWorldBounds( boost::shared_ptr<MovingObject> o )
 void World::SpawnGirl()
 {
 	boost::shared_ptr<Girl> girl( new Girl( spr_loader ) );
-	girl->SetPos( grid.ConvertToScreen( GridPos( 10, 5 ) ) );
+	GridPos pos( math::irandom( 0, grid.GetColumns() ),
+			     math::irandom( 0, grid.GetRows() ) );
+	girl->SetPos( grid.ConvertToScreen( pos ) );
 	girl_controller->Attach( girl );
 	
 	girls.push_back( girl );

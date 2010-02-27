@@ -11,6 +11,7 @@
 class Game : public Tree::GameState {
 public:
 	Game();
+	~Game();
 	
 	bool HandleEvent( hgeInputEvent &e );
 	

@@ -1,3 +1,6 @@
+-- here are the spriteloading facility
+-- be gentle with it
+
 box = 32
 
 sprites = {

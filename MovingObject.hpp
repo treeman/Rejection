@@ -41,6 +41,10 @@ public:
 	
 	float LastMove();
 	
+	void Pause( float time );
+	void Unpause();
+	bool IsPaused();
+	
 	virtual void FaceLeft() { }
 	virtual void FaceRight() { }
 	virtual void FaceUp() { }
@@ -79,4 +83,11 @@ protected:
 	Vec2D face_dir;
 	
 	Tree::Timer last_move;
+	
+	virtual void GetPaused() { }
+	virtual void GetUnpaused() { }
+	
+	bool is_paused;
+	Tree::Timer pause_timer;
+	float pause_time;
 };
