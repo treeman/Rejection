@@ -1,4 +1,5 @@
 #include "Dude.hpp"
+#include "Tweaks.hpp"
 
 Dude::Dude( boost::shared_ptr<SpriteLoader> spr_loader )
 {
@@ -21,7 +22,7 @@ Dude::Dude( boost::shared_ptr<SpriteLoader> spr_loader )
 
 float Dude::GetSpeed()
 {
-	return 200;
+	return TWEAKS->GetFloat( "dude_speed" );
 }
 
 void Dude::FaceLeft()

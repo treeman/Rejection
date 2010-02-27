@@ -1,9 +1,10 @@
 #include "GrassTiles.hpp"
 #include "Tree/Log.hpp"
+#include "Tweaks.hpp"
 
 GrassTile::GrassTile( Vec2D pos ) : Tile( pos )
 {
-	timer = 10;
+	timer = TWEAKS->GetFloat( "grass_lvl3_grow_time" );
 }
 
 void GrassTile::WalkOver()
@@ -12,15 +13,15 @@ void GrassTile::WalkOver()
 }
 bool GrassTile::IsSeeThrough()
 {
-	return timer <= 5.0;
+	return timer <= TWEAKS->GetFloat( "grass_lvl3_grow_time" );;
 }
 
 void GrassTile::Update( float dt )
 {
 	timer += dt;
 	
-	const float lvl2 = 2.0;
-	const float lvl3 = 5.0;
+	const float lvl2 = TWEAKS->GetFloat( "grass_lvl2_grow_time" );;
+	const float lvl3 = TWEAKS->GetFloat( "grass_lvl3_grow_time" );;
 	
 	if( timer <= lvl2 ) { curr_spr = lvl1_spr; }
 	else if( timer <= lvl3 ) { curr_spr = lvl2_spr; }

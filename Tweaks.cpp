@@ -26,6 +26,6 @@ float Tweaks::GetFloat( std::string s )
 	FloatMap::iterator it = floats.find( s );
 	if( it != floats.end() ) { return it->second; }
 	else {
-		throw( Error::setting_not_found( (s + " wasn't found in Tweaks::GetFloat").c_str() ) );
+		throw( Error::setting_not_found( (s + " wasn't found in tweaks.lua").c_str() ) );
 	}
 }

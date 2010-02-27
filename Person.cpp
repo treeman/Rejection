@@ -3,7 +3,7 @@
 
 Person::Person()
 {
-	const int vision_size = 5;
+	const int vision_size = TWEAKS->GetFloat( "person_vision_size" );
 	
 	vision.resize( vision_size );
 	for( int n = 0; n < vision_size; ++n ) {

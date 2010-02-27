@@ -1,4 +1,5 @@
 #include "Girl.hpp"
+#include "Tweaks.hpp"
 
 Girl::Girl( boost::shared_ptr<SpriteLoader> spr_loader )
 {
@@ -15,7 +16,7 @@ Girl::Girl( boost::shared_ptr<SpriteLoader> spr_loader )
 
 float Girl::GetSpeed()
 {
-	return 100;
+	return TWEAKS->GetFloat( "girl_speed" );
 }
 
 void Girl::FaceLeft()

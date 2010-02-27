@@ -3,6 +3,7 @@
 #include "Tree/Log.hpp"
 #include "Tree/Util.hpp"
 #include "Tree/Math.hpp"
+#include "Tweaks.hpp"
 
 GirlController::GirlController()
 {
@@ -63,7 +64,7 @@ void GirlController::UpdateGirl( boost::shared_ptr<Girl> girl, float )
 	//then try to follow a clear path
 	//this doesn't include the back path
 	Vec2D clear_path;
-	if( girl->LastMove() > 0.3 && IsClearPath( clear_path, girl ) ) {
+	if( girl->LastMove() > TWEAKS->GetFloat( "pathfinding_move_delay" ) && IsClearPath( clear_path, girl ) ) {
 		if( clear_path == Vec2D::left ) MoveLeft( girl );
 		else if( clear_path == Vec2D::right ) MoveRight( girl );
 		else if( clear_path == Vec2D::up ) MoveUp( girl );
@@ -82,9 +83,14 @@ void GirlController::UpdateGirl( boost::shared_ptr<Girl> girl, float )
 	
 	//if we havn't had a move for a while
 	//stop so she can think ^^
-	if( girl->LastMove() > 1.5 ) {
+	if( girl->LastMove() > math::frandom( TWEAKS->GetFloat( "girl_new_move_min" ), 
+										  TWEAKS->GetFloat( "girl_new_move_max" ) ) )
+	{
 		MoveStop( girl );
-		girl->Pause( math::frandom( 0.7, 1.3 ) );
+		girl->Pause( math::frandom( 
+			TWEAKS->GetFloat( "girl_pause_min" ), 
+			TWEAKS->GetFloat( "girl_pause_max" ) 
+		) );
 	}
 }
 
