@@ -2,6 +2,7 @@
 
 #include "Tree/Vec2D.hpp"
 #include "Tree/Rect.hpp"
+#include "Tree/Timer.hpp"
 
 class MovingObject {
 public:
@@ -29,20 +30,16 @@ public:
 	void MoveUp();
 	void MoveDown();
 	
-	void MoveOneLeft();
-	void MoveOneRight();
-	void MoveOneUp();
-	void MoveOneDown();
-	
 	bool IsMoving();
 	
 	bool WantsStop();
-	bool WantsStopNext();
 	
 	bool WantsLeft();
 	bool WantsRight();
 	bool WantsUp();
 	bool WantsDown();
+	
+	float LastMove();
 	
 	virtual void FaceLeft() { }
 	virtual void FaceRight() { }
@@ -62,7 +59,6 @@ protected:
 	Vec2D vel;
 	
 	bool wants_stop;
-	bool wants_stop_next;
 	bool stop_set;
 	Vec2D stop_pos;
 
@@ -81,4 +77,6 @@ protected:
 	
 	Vec2D next_move;
 	Vec2D face_dir;
+	
+	Tree::Timer last_move;
 };

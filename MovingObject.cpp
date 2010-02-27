@@ -2,8 +2,9 @@
 
 MovingObject::MovingObject()
 {
-	wants_stop = wants_stop_next = stop_set = false;
+	wants_stop = stop_set = false;
 	DirFaceDown();
+	last_move.Start();
 }
 
 Tree::Rect MovingObject::Bounds() const
@@ -19,6 +20,7 @@ void MovingObject::StopAt( Vec2D target )
 void MovingObject::MoveStop()
 {
 	wants_stop = true;
+	last_move.Restart();
 }
 void MovingObject::MoveLeft()
 {
@@ -30,6 +32,7 @@ void MovingObject::MoveLeft()
 	else {
 		NextLeft();
 	}
+	last_move.Restart();
 }
 void MovingObject::MoveRight()
 {
@@ -41,6 +44,7 @@ void MovingObject::MoveRight()
 	else {
 		NextRight();
 	}
+	last_move.Restart();
 }
 void MovingObject::MoveUp()
 {
@@ -52,6 +56,7 @@ void MovingObject::MoveUp()
 	else {
 		NextUp();
 	}
+	last_move.Restart();
 }
 void MovingObject::MoveDown()
 {
@@ -63,26 +68,7 @@ void MovingObject::MoveDown()
 	else {
 		NextDown();
 	}
-}
-void MovingObject::MoveOneLeft()
-{
-	wants_stop_next = true;
-	MoveLeft();
-}
-void MovingObject::MoveOneRight()
-{
-	wants_stop_next = true;
-	MoveRight();
-}
-void MovingObject::MoveOneUp()
-{
-	wants_stop_next = true;
-	MoveUp();
-}
-void MovingObject::MoveOneDown()
-{
-	wants_stop_next = true;
-	MoveDown();
+	last_move.Restart();
 }
 bool MovingObject::IsMoving()
 {
@@ -91,10 +77,6 @@ bool MovingObject::IsMoving()
 bool MovingObject::WantsStop()
 {
 	return wants_stop && !stop_set;
-}
-bool MovingObject::WantsStopNext()
-{
-	return wants_stop_next && !stop_set;
 }
 bool MovingObject::WantsLeft()
 {
@@ -111,6 +93,11 @@ bool MovingObject::WantsUp()
 bool MovingObject::WantsDown()
 {
 	return vel.y > 0;
+}
+
+float MovingObject::LastMove()
+{
+	return last_move.GetTime();
 }
 
 bool MovingObject::FacesLeft()
@@ -172,7 +159,7 @@ void MovingObject::DirFaceDown()
 
 void MovingObject::ForceStop()
 {
-	wants_stop = wants_stop_next = stop_set = false;
+	wants_stop = stop_set = false;
 	pos = stop_pos;
 	vel = Vec2D::zero;
 	if( next_move != Vec2D::zero ) {

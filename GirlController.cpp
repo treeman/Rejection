@@ -2,6 +2,7 @@
 #include "Girl.hpp"
 #include "Tree/Log.hpp"
 #include "Tree/Util.hpp"
+#include "Tree/Math.hpp"
 
 GirlController::GirlController()
 {
@@ -25,37 +26,31 @@ void GirlController::Update( float dt )
 }
 void GirlController::UpdateGirl( boost::shared_ptr<Girl> girl, float )
 {
-//	if( girl->IsMoving() ) return;
-	
 	const Person::Vision vision = girl->GetVision();
 	
 	GridPos my_pos( vision.size() / 2, vision[0].size() / 2 );
 	
-	//kill the spambot!! :@
-	if( print_vision_t.GetTime() > 2.0 ) {
-		//print a nice debug view of the girls vision
-		std::string vision_string = "girl vision:\n";
-		for( int y = 0; y < vision.size(); ++y ) {
-			for( int x = 0; x < vision[y].size(); ++x ) {
-				switch( vision[x][y] ) {
-					case VISION_FREE: vision_string += "."; break;
-					case VISION_OBSUCRED: vision_string += "x"; break;
-					case VISION_DUDE: vision_string += "D"; break;
-					case VISION_SELF: vision_string += "g"; break;
-					case VISION_INVALID: vision_string += "i"; break;
-				}
-			}
-			vision_string += "\n";
-		}
-		L_ << vision_string;
-		print_vision_t.Restart();
-	}
-	
-//	if( girl->WantsStop() ) {
-//		L_ << "girl wants to stop!!";
+//	//kill the spambot!! :@
+//	if( print_vision_t.GetTime() > 2.0 ) {
+//		//print a nice debug view of the girls vision
+//		std::string vision_string = "girl vision:\n";
+//		for( int y = 0; y < vision.size(); ++y ) {
+//			for( int x = 0; x < vision[y].size(); ++x ) {
+//				switch( vision[x][y] ) {
+//					case VISION_FREE: vision_string += "."; break;
+//					case VISION_OBSUCRED: vision_string += "x"; break;
+//					case VISION_DUDE: vision_string += "D"; break;
+//					case VISION_SELF: vision_string += "g"; break;
+//					case VISION_INVALID: vision_string += "i"; break;
+//				}
+//			}
+//			vision_string += "\n";
+//		}
+//		L_ << vision_string;
+//		print_vision_t.Restart();
 //	}
-//	girl->MoveStop();
 	
+	//first check if we see the dude
 	GridPos dude_pos;
 	if( IsDudeVisible( dude_pos, vision ) ) {
 		if( dude_pos.x < my_pos.x ) MoveLeft( girl );
@@ -65,13 +60,30 @@ void GirlController::UpdateGirl( boost::shared_ptr<Girl> girl, float )
 		return;
 	}
 	
+	//then try to follow a clear path
+	//this doesn't include the back path
 	Vec2D clear_path;
-	if( IsClearPath( clear_path, girl ) ) {
+	if( girl->LastMove() > 0.3 && IsClearPath( clear_path, girl ) ) {
 		if( clear_path == Vec2D::left ) MoveLeft( girl );
 		else if( clear_path == Vec2D::right ) MoveRight( girl );
 		else if( clear_path == Vec2D::up ) MoveUp( girl );
 		else if( clear_path == Vec2D::down ) MoveDown( girl );
 		return;
+	}
+	
+	//if we see nothing choose a random direction
+	if( !girl->IsMoving() && girl->LastMove() > 1.0 ) {
+		Vec2D dir = RandomDir( vision );
+		if( dir == Vec2D::left ) MoveLeft( girl );
+		else if( dir == Vec2D::right ) MoveRight( girl );
+		else if( dir == Vec2D::up ) MoveUp( girl );
+		else if( dir == Vec2D::down ) MoveDown( girl );
+	}
+	
+	//if we havn't had a move for a while
+	//stop so she can think ^^
+	if( girl->LastMove() > 1.5 ) {
+		MoveStop( girl );
 	}
 }
 
@@ -98,22 +110,6 @@ bool GirlController::IsDudeVisible( GridPos &pos, Person::Vision vision )
 	return false;
 }
 
-void GirlController::MoveLeft( boost::shared_ptr<Girl> girl )
-{
-	if( !girl->WantsLeft() ) girl->MoveLeft();
-}
-void GirlController::MoveRight( boost::shared_ptr<Girl> girl )
-{
-	if( !girl->WantsRight() ) girl->MoveRight();
-}
-void GirlController::MoveUp( boost::shared_ptr<Girl> girl )
-{
-	if( !girl->WantsUp() ) girl->MoveUp();
-}
-void GirlController::MoveDown( boost::shared_ptr<Girl> girl )
-{
-	if( !girl->WantsDown() ) girl->MoveDown();
-}
 bool GirlController::IsClearPath( Vec2D &dir, boost::shared_ptr<Girl> girl )
 {
 	const Person::Vision vision = girl->GetVision();
@@ -138,7 +134,7 @@ bool GirlController::IsClearPath( Vec2D &dir, boost::shared_ptr<Girl> girl )
 			free_paths.push_back( Vec2D::down );
 		}
 		//and check the dir she's facing
-		if( IsFree( my_pos.x - face_dir.x, my_pos.y, vision ) ) {
+		if( IsFree( my_pos.x + face_dir.x, my_pos.y, vision ) ) {
 			free_paths.push_back( face_dir );
 		}
 	}
@@ -152,11 +148,15 @@ bool GirlController::IsClearPath( Vec2D &dir, boost::shared_ptr<Girl> girl )
 			free_paths.push_back( Vec2D::right );
 		}
 		//and check the dir she's facing
-		if( IsFree( my_pos.x, my_pos.y - face_dir.y, vision ) ) {
+		if( IsFree( my_pos.x, my_pos.y + face_dir.y, vision ) ) {
 			free_paths.push_back( face_dir );
 		}
 	}
 	if( !free_paths.empty() ) {
+//		for( FreePaths::iterator it = free_paths.begin(); it != free_paths.end(); ++it ) {
+//			L_ << "path: " << it->x << "," << it->y;
+//		}
+		
 		dir = *Tree::random( free_paths.begin(), free_paths.end() );
 		return true;
 	}
@@ -168,4 +168,44 @@ bool GirlController::IsFree( int x, int y, Person::Vision vision )
 {
 	if( !IsValid( x, y, vision ) ) return false;
 	else return vision[x][y] == VISION_FREE;
+}
+Vec2D GirlController::RandomDir( Person::Vision vision )
+{
+	const GridPos my_pos( vision.size() / 2, vision[0].size() / 2 );
+	
+	typedef std::vector<Vec2D> FreePaths;
+	FreePaths free_paths;
+	
+	if( IsValid( my_pos.x - 1, my_pos.y, vision ) ) free_paths.push_back( Vec2D::left );
+	if( IsValid( my_pos.x + 1, my_pos.y, vision ) ) free_paths.push_back( Vec2D::right );
+	if( IsValid( my_pos.x, my_pos.y - 1, vision ) ) free_paths.push_back( Vec2D::up );
+	if( IsValid( my_pos.x, my_pos.y + 1, vision ) ) free_paths.push_back( Vec2D::down );
+	
+	if( !free_paths.empty() ) {
+		return *Tree::random( free_paths.begin(), free_paths.end() );
+	}
+	else {
+		return Vec2D::zero;
+	}
+}
+
+void GirlController::MoveStop( boost::shared_ptr<Girl> girl )
+{
+	if( girl->IsMoving() ) girl->MoveStop();
+}
+void GirlController::MoveLeft( boost::shared_ptr<Girl> girl )
+{
+	if( !girl->WantsLeft() ) girl->MoveLeft();
+}
+void GirlController::MoveRight( boost::shared_ptr<Girl> girl )
+{
+	if( !girl->WantsRight() ) girl->MoveRight();
+}
+void GirlController::MoveUp( boost::shared_ptr<Girl> girl )
+{
+	if( !girl->WantsUp() ) girl->MoveUp();
+}
+void GirlController::MoveDown( boost::shared_ptr<Girl> girl )
+{
+	if( !girl->WantsDown() ) girl->MoveDown();
 }

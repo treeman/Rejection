@@ -25,10 +25,12 @@ private:
 	bool IsDudeVisible( GridPos &pos, Person::Vision vision );
 	bool IsClearPath( Vec2D &dir, boost::shared_ptr<Girl> girl );
 	bool IsFree( int x, int y, Person::Vision vision );
+	Vec2D RandomDir( Person::Vision vision );
 	
 	//hilarious
 	//but necessery to avoid a lot of "is girl already moving right?"
 	//questions
+	void MoveStop( boost::shared_ptr<Girl> girl );
 	void MoveLeft( boost::shared_ptr<Girl> girl );
 	void MoveRight( boost::shared_ptr<Girl> girl );
 	void MoveUp( boost::shared_ptr<Girl> girl );
