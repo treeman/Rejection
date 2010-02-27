@@ -1,6 +1,8 @@
 #pragma once
 
-#include "Lua/Lua.hpp"
+#include <string>
+#include <map>
+
 #include "Tree/Singleton.hpp"
 
 #define TWEAKS Tweaks::Instance()
@@ -9,7 +11,8 @@ class Tweaks : public Tree::Singleton<Tweaks> {
 public:
 	Tweaks();
 	
-	LuaState Lua();
+	float GetFloat( std::string s );
 private:
-	LuaState L;
+	typedef std::map<std::string, float> FloatMap;
+	FloatMap floats;
 };

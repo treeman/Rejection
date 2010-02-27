@@ -10,6 +10,8 @@ Game::Game() : spr_loader( new SpriteLoader() )
 	spr_loader->Load( "sprites.lua" );
 	world.reset( new World( spr_loader ) );
 	dude_controller.reset( new DudeController( world->GetDude() ) );
+	
+	TWEAKS;
 }
 Game::~Game()
 {
