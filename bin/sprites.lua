@@ -17,6 +17,9 @@ sprites = {
     {   name = "dude_back",
         path = "gfx/objects.png",
         x = box, y = 4 * box, w = box, h = box, },
+    {   name = "dude_head",
+        path = "gfx/objects.png",
+        x = 0, y = 1 * box, w = box, h = box, },  
         
     -- girl
     {   name = "girl_front",
@@ -50,4 +53,9 @@ sprites = {
         path = "gfx/objects.png",
         color = 0xff476f16,
         x = 0, y = 0, w = box, h = box, },
+        
+    -- time machine
+    {   name = "timemachine",
+        path = "gfx/objects.png",
+        x = 4 * box, y = 2 * box, w = box, h = box, },
 }

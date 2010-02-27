@@ -10,12 +10,16 @@
 #include "Dude.hpp"
 #include "Girl.hpp"
 #include "GirlController.hpp"
+#include "TimeMachine.hpp"
+#include "WorldListener.hpp"
 
 class World {
 public:
 	World( boost::shared_ptr<SpriteLoader> spr_loader );
 	
 	boost::shared_ptr<Dude> GetDude();
+	
+	void AddListener( WorldListener *l );
 	
 	void Update( float dt );
 	void Render();
@@ -56,6 +60,12 @@ private:
 	
 	TileGrid tiles;
 	
+	boost::shared_ptr<TimeMachine> time_machine;
+	
+	typedef std::vector<WorldListener*> Listeners;
+	Listeners listeners;
+	
+	void InitDebug();
 	boost::shared_ptr<Tree::Dator<bool> > show_mouse_grid;
 	boost::shared_ptr<Tree::Dator<bool> > show_bounds;
 	

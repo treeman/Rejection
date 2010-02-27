@@ -10,8 +10,10 @@ Game::Game() : spr_loader( new SpriteLoader() )
 	spr_loader->Load( "sprites.lua" );
 	world.reset( new World( spr_loader ) );
 	dude_controller.reset( new DudeController( world->GetDude() ) );
+	info_bar.reset( new InfoBar( spr_loader ) );
+	info_bar->SetLife( 5 );
 	
-	TWEAKS;
+	world->AddListener( info_bar.get() );
 }
 Game::~Game()
 {
@@ -40,4 +42,5 @@ void Game::Update( float dt )
 void Game::Render()
 {
 	world->Render();
+	info_bar->Render();
 }

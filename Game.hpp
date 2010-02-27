@@ -7,6 +7,7 @@
 
 #include "World.hpp"
 #include "DudeController.hpp"
+#include "InfoBar.hpp"
 
 class Game : public Tree::GameState {
 public:
@@ -23,4 +24,5 @@ private:
 	boost::shared_ptr<SpriteLoader> spr_loader;
 	boost::shared_ptr<World> world;
 	boost::shared_ptr<Controller> dude_controller;
+	boost::shared_ptr<InfoBar> info_bar;
 };

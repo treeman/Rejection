@@ -4,7 +4,7 @@
 #include "Tree/Log.hpp"
 #include "GrassTiles.hpp"
 
-World::World( boost::shared_ptr<SpriteLoader> _spr_loader ) : grid( 32, 32, 23, 32, 32, 17 ),
+World::World( boost::shared_ptr<SpriteLoader> _spr_loader ) : grid( 32, 32, 23, 64, 32, 16 ),
 	spr_loader( _spr_loader )
 {
 	InitTiles( spr_loader );
@@ -18,21 +18,20 @@ World::World( boost::shared_ptr<SpriteLoader> _spr_loader ) : grid( 32, 32, 23, 
 		SpawnGirl();
 	}
 	
-	fnt.reset( new hgeFont( "fnt/arial10.fnt" ) );
+	time_machine.reset( new TimeMachine( spr_loader ) );
+	time_machine->SetPos( grid.ConvertToScreen( GridPos( 14, 0 ) ) );
 	
-	show_mouse_grid.reset( new Tree::Dator<bool>( false ) );
-	SETTINGS->RegisterVariable( "mouse_grid_pos_show", boost::weak_ptr<Tree::BaseDator>( show_mouse_grid ) );
-	
-	show_bounds.reset( new Tree::Dator<bool>( false ) );
-	SETTINGS->RegisterVariable( "bounds_show", boost::weak_ptr<Tree::BaseDator>( show_bounds ) );
-	
-	debug_dude.reset( new Tree::Dator<bool>( false ) );
-	SETTINGS->RegisterVariable( "dude_debug", boost::weak_ptr<Tree::BaseDator>( debug_dude ) );
+	InitDebug();
 }
 
 boost::shared_ptr<Dude> World::GetDude()
 {
 	return dude;
+}
+
+void World::AddListener( WorldListener *l )
+{
+	listeners.push_back( l );
 }
 
 void World::Update( float dt )
@@ -63,6 +62,8 @@ void World::Update( float dt )
 			tile->Update( dt );
 		}
 	}
+	
+	time_machine->Update( dt );
 }
 void World::Render()
 {
@@ -79,6 +80,8 @@ void World::Render()
 			}
 		}
 	}
+	
+	time_machine->Render();
 	
 	BOOST_FOREACH( boost::shared_ptr<Girl> girl, girls ) {
 		RenderPerson( girl );
@@ -254,7 +257,7 @@ void World::KillGirl( boost::shared_ptr<Girl> girl )
 void World::InitTiles( boost::shared_ptr<SpriteLoader> spr_loader )
 {
 	int n = 0;
-	for( size_t x = 0; x < grid.GetColumns(); ++x ) {
+	for( size_t x = 0; x < grid.GetColumns(); ++x, ++n ) {
 		Tiles column;
 		for( size_t y = 0; y < grid.GetRows(); ++y, ++n ) {
 			TilePtr tile;
@@ -284,4 +287,18 @@ bool World::IsSeeThrough( int x, int y )
 bool World::IsValid( int x, int y )
 {
 	return x >= 0 && x < grid.GetColumns() && y >= 0 && y < grid.GetRows();
+}
+
+void World::InitDebug()
+{
+	fnt.reset( new hgeFont( "fnt/arial10.fnt" ) );
+	
+	show_mouse_grid.reset( new Tree::Dator<bool>( false ) );
+	SETTINGS->RegisterVariable( "mouse_grid_pos_show", boost::weak_ptr<Tree::BaseDator>( show_mouse_grid ) );
+	
+	show_bounds.reset( new Tree::Dator<bool>( false ) );
+	SETTINGS->RegisterVariable( "bounds_show", boost::weak_ptr<Tree::BaseDator>( show_bounds ) );
+	
+	debug_dude.reset( new Tree::Dator<bool>( false ) );
+	SETTINGS->RegisterVariable( "dude_debug", boost::weak_ptr<Tree::BaseDator>( debug_dude ) );
 }
