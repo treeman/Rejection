@@ -4,10 +4,11 @@
 
 InfoBar::InfoBar( boost::shared_ptr<SpriteLoader> spr_loader )
 {
-	life_spr = spr_loader->Get( "dude_head" );
+	life_spr = spr_loader->Get( "dude_life" );
 	life = 5;
 	money = 1337;
 	money_fnt.reset( new hgeFont( "fnt/visitor15.fnt" ) );
+	background = spr_loader->Get( "brick" );
 }
 
 void InfoBar::SetLife( int n )
@@ -20,10 +21,13 @@ void InfoBar::SetMoney( int n )
 }
 void InfoBar::Render()
 {
+	//no not the owl!!!
+	background->spr->Render(0,0);
+	
 	for( int n = 0; n < life; ++n ) {
-		life_spr->spr->Render( 110 + n * 30, 20 );
+		life_spr->spr->Render( 100 + n * 30, 0 );
 	}
 	
-	money_fnt->SetColor( 0xff27cd2b );
-	money_fnt->printf( 480, 20, HGETEXT_RIGHT, "%i $", money );
+	money_fnt->SetColor( 0xff23db4a );
+	money_fnt->printf( 480, 8, HGETEXT_RIGHT, "%i $", money );
 }

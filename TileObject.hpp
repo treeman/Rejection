@@ -9,6 +9,9 @@ public:
 	
 	virtual Tree::Rect Bounds() const;
 	
+	virtual bool IsWalkable() { return true; }
+	virtual bool IsSeeThrough() { return true; }
+	
 	void SetPos( Vec2D p ) { pos = p; }
 	void SetXPos( float x ) { pos.x = x; }
 	void SetYPos( float y ) { pos.y = y; }

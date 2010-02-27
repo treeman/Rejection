@@ -17,4 +17,6 @@ private:
 	
 	int money;
 	boost::shared_ptr<hgeFont> money_fnt;
+	
+	boost::shared_ptr<Sprite> background;
 };

@@ -4,6 +4,7 @@
 #include "Grid.hpp"
 #include "Person.hpp"
 #include "Tree/Timer.hpp"
+#include "Tree/Shufflebag.hpp"
 
 class Girl;
 
@@ -36,8 +37,6 @@ private:
 	void MoveRight( boost::shared_ptr<Girl> girl );
 	void MoveUp( boost::shared_ptr<Girl> girl );
 	void MoveDown( boost::shared_ptr<Girl> girl );
-	
-//	typedef Tree::ShuffleBag<Vec2D> RandomDirs;
 	
 	HgeObj hge;
 	

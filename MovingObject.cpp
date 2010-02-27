@@ -10,7 +10,7 @@ MovingObject::MovingObject()
 
 Tree::Rect MovingObject::Bounds() const
 {
-	return Tree::Rect( pos.x + 1, pos.y + 1, 30, 30 );
+	return Tree::Rect( pos.x, pos.y, 32, 32 );
 }
 
 void MovingObject::StopAt( Vec2D target )

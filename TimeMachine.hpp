@@ -9,6 +9,9 @@ class TimeMachine : public TileObject {
 public:
 	TimeMachine( boost::shared_ptr<SpriteLoader> spr_loader );
 	
+	bool IsWalkable() { return false; }
+	bool IsSeeThrough() { return false; }
+	
 	void Update( float dt );
 	void Render();
 private:

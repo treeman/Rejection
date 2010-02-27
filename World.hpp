@@ -27,7 +27,8 @@ private:
 	void UpdatePerson( boost::shared_ptr<Person> o, float dt );
 	void RenderPerson( boost::shared_ptr<Person> o );
 	
-	void CheckWorldBounds( boost::shared_ptr<MovingObject> o );
+	void CheckCollisions( boost::shared_ptr<MovingObject> o );
+	bool Collision( Tree::Rect bounds, int x, int y );
 	
 	Grid grid;
 	
@@ -47,15 +48,17 @@ private:
 	typedef std::vector<TilePtr> Tiles;
 	typedef std::vector<Tiles> TileGrid;
 	
-	void InitTiles( boost::shared_ptr<SpriteLoader> spr_loader );
+	void InitTiles();
+	void Geekify();
+	void Geekify( int x, int y );
 	
-	bool IsWalkable( GridPos p ) { IsWalkable( p.x, p.y ); }
+	bool IsWalkable( GridPos p ) { return IsWalkable( p.x, p.y ); }
 	bool IsWalkable( int x, int y );
 	
-	bool IsSeeThrough( GridPos p ) { IsSeeThrough( p.x, p.y ); }
+	bool IsSeeThrough( GridPos p ) { return IsSeeThrough( p.x, p.y ); }
 	bool IsSeeThrough( int x, int y );
 	
-	bool IsValid( GridPos p ) { IsValid( p.x, p.y ); }
+	bool IsValid( GridPos p ) { return IsValid( p.x, p.y ); }
 	bool IsValid( int x, int y );
 	
 	TileGrid tiles;

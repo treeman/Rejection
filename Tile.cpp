@@ -12,15 +12,22 @@ boost::shared_ptr<TileObject> Tile::Attachment()
 
 bool Tile::Attach( boost::shared_ptr<TileObject> a )
 {
-	if( attachment ) {
-		attachment = a;
-		return true;
-	}
-	else { return false; }
+	attachment = a;
+	return true;
 }
 void Tile::Detach()
 {
 	attachment.reset();
+}
+bool Tile::IsWalkable()
+{
+	if( attachment ) return attachment->IsWalkable();
+	else return true;
+}
+bool Tile::IsSeeThrough()
+{
+	if( attachment ) return attachment->IsSeeThrough();
+	else return true;
 }
 
 Tree::Rect Tile::Bounds() const 

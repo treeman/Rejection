@@ -19,8 +19,8 @@ public:
 	void Detach();
 	
 	virtual void WalkOver() { }
-	virtual bool IsWalkable() { return true; }
-	virtual bool IsSeeThrough() { return true; };
+	virtual bool IsWalkable();
+	virtual bool IsSeeThrough();
 	
 	void SetPos( Vec2D p ) { pos = p; }
 	Vec2D GetPos() const { return pos; }

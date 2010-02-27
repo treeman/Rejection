@@ -4,22 +4,24 @@
 #include "Tree/Log.hpp"
 #include "GrassTiles.hpp"
 
-World::World( boost::shared_ptr<SpriteLoader> _spr_loader ) : grid( 32, 32, 23, 64, 32, 16 ),
+World::World( boost::shared_ptr<SpriteLoader> _spr_loader ) : grid( 0, 32, 25, 30, 32, 18 ),
 	spr_loader( _spr_loader )
 {
-	InitTiles( spr_loader );
+	InitTiles();
 	
 	dude.reset( new Dude( spr_loader ) );
 	dude->SetPos( grid.ConvertToScreen( GridPos( 5, 0 ) ) );
 	
 	girl_controller.reset( new GirlController() );
 	
-	for( int n = 0; n < 5; ++n ) {
-		SpawnGirl();
-	}
+//	for( int n = 0; n < 5; ++n ) {
+//		SpawnGirl();
+//	}
 	
 	time_machine.reset( new TimeMachine( spr_loader ) );
 	time_machine->SetPos( grid.ConvertToScreen( GridPos( 14, 0 ) ) );
+	
+	tiles[14][0]->Attach( time_machine );
 	
 	InitDebug();
 }
@@ -170,23 +172,17 @@ void World::UpdatePerson( boost::shared_ptr<Person> o, float dt )
 		}
 	}
 	
-	CheckWorldBounds( o );
+	CheckCollisions( o );
 	
 	Person::Vision vision = o->GetVision();
 	const GridPos self_pos( vision.size() / 2, vision[0].size() / 2 );
 	const GridPos dude_pos = grid.ConvertToGrid( dude->Bounds().GetCenter() );
-	
-//	L_ << "person updating stuff:";
-//	L_ << "self_pos: " << self_pos.x << "," << self_pos.y;
-//	L_ << "dude_pos: " << dude_pos.x << "," << dude_pos.y;
-//	L_ << "grid_pos: " << grid_pos.x << "," << grid_pos.y;
 	
 	for( int y = 0; y < vision.size(); ++y ) {
 		for( int x = 0; x < vision[y].size(); ++x ) {
 			
 			if( self_pos.x == x && self_pos.y == y ) {
 				vision[x][y] = VISION_SELF;
-//				L_ << "self found! :D";
 				continue;
 			}
 			
@@ -195,13 +191,10 @@ void World::UpdatePerson( boost::shared_ptr<Person> o, float dt )
 				grid_pos.y - self_pos.y + y
 			);
 			
-//			L_ << "rel_grid_pos: " << rel_grid_pos.x << "," << rel_grid_pos.y;
-			
 			if( dude_pos == rel_grid_pos ) { 
 				vision[x][y] = VISION_DUDE; 
 			}
 			else if( IsSeeThrough( rel_grid_pos ) ) {
-//				L_ << "oh it's free alright!";
 				vision[x][y] = VISION_FREE; 
 			}
 			else if( !IsValid( rel_grid_pos ) ) { 
@@ -221,21 +214,40 @@ void World::RenderPerson( boost::shared_ptr<Person> o )
 	o->Render();
 }
 
-void World::CheckWorldBounds( boost::shared_ptr<MovingObject> o )
+void World::CheckCollisions( boost::shared_ptr<MovingObject> o )
 {
-	float x1, y1, x2, y2;
-	grid.GetBounds( x1, y1, x2, y2 );
+	const GridPos grid_pos = grid.ConvertToGrid( o->Bounds().GetCenter() );
 	
-	const Tree::Rect b(
-		o->GetPos().x,
-		o->GetPos().y,
-		32, 32 );
-	
-	if( b.x1 < x1 ) o->SetXPos( x1 );
-	if( b.x2 > x2 ) o->SetXPos( x2 - b.Width() );
-	
-	if( b.y1 < y1 ) o->SetYPos( y1 );
-	if( b.y2 > y2 ) o->SetYPos( y2 - b.Height() );
+	if( Collision( o->Bounds(), grid_pos.x - 1, grid_pos.y ) ) {
+			o->SetPos( grid.ConvertToScreen( grid_pos ) );
+			o->MoveStop();
+	}
+	else if( Collision( o->Bounds(), grid_pos.x + 1, grid_pos.y ) ) {
+			o->SetPos( grid.ConvertToScreen( grid_pos ) );
+			o->MoveStop();
+	}
+	else if( Collision( o->Bounds(), grid_pos.x, grid_pos.y - 1 ) ) {
+			o->SetPos( grid.ConvertToScreen( grid_pos ) );
+			o->MoveStop();
+	}
+	else if( Collision( o->Bounds(), grid_pos.x, grid_pos.y + 1 ) ) {
+			o->SetPos( grid.ConvertToScreen( grid_pos ) );
+			o->MoveStop();
+	}
+}
+
+bool World::Collision( Tree::Rect bounds, int x, int y )
+{
+	if( !IsValid( x, y ) ) {
+		float x1, y1, x2, y2;
+		grid.GetBounds( x1, y1, x2, y2 );
+		
+		return bounds.x1 < x1 || bounds.x2 > x2 ||
+			bounds.y1 < y1 || bounds.y2 > y2;
+	}
+	else {
+		return !IsWalkable( x, y ) && bounds.Intersects( tiles[x][y]->Bounds() );
+	}
 }
 
 void World::SpawnGirl()
@@ -254,7 +266,7 @@ void World::KillGirl( boost::shared_ptr<Girl> girl )
 	std::remove( girls.begin(), girls.end(), girl );
 }
 
-void World::InitTiles( boost::shared_ptr<SpriteLoader> spr_loader )
+void World::InitTiles()
 {
 	int n = 0;
 	for( size_t x = 0; x < grid.GetColumns(); ++x, ++n ) {
@@ -270,6 +282,47 @@ void World::InitTiles( boost::shared_ptr<SpriteLoader> spr_loader )
 			column.push_back( tile );
 		}
 		tiles.push_back( column );
+	}
+	
+	//spell G33k on the grass xD
+	Geekify();
+}
+void World::Geekify()
+{
+	//G
+	for( int x = 2; x < 6; ++x ) Geekify(x,5);
+	for( int y = 6; y < 11; ++y ) Geekify(2,y);
+	for( int x = 3; x < 7; ++x ) Geekify(x,10);
+	Geekify(6,9); Geekify(6,8); Geekify(5,8);
+	
+	//first 3
+	for( int x = 8; x < 11; ++x ) Geekify(x,6);
+	for( int x = 8; x < 11; ++x ) Geekify(x,10);
+	for( int x = 9; x < 11; ++x ) Geekify(x,8);
+	for( int y = 7; y < 10; ++y ) Geekify(11,y);
+	
+	//2nd 3
+	for( int x = 13; x < 16; ++x ) Geekify(x,6);
+	for( int x = 13; x < 16; ++x ) Geekify(x,10);
+	for( int x = 14; x < 16; ++x ) Geekify(x,8);
+	for( int y = 7; y < 10; ++y ) Geekify(16,y);
+	
+	//K
+	for( int y = 6; y < 11; ++y ) Geekify(18,y);
+	Geekify(21,6);
+	Geekify(20,7);
+	Geekify(19,8);
+	Geekify(20,9);
+	Geekify(21,10);
+}
+void World::Geekify( int x, int y )
+{
+	GrassTile *tile = dynamic_cast<GrassTile*>( tiles[x][y].get() );
+	if( tile->IsDark() ) {
+		tiles[x][y].reset( new GeekDarkGrassTile( grid.ConvertToScreen( GridPos( x, y ) ), spr_loader ) );
+	}
+	else {
+		tiles[x][y].reset( new GeekLightGrassTile( grid.ConvertToScreen( GridPos( x, y ) ), spr_loader ) );
 	}
 }
 bool World::IsWalkable( int x, int y )

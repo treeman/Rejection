@@ -6,6 +6,6 @@ class Controller : public Tree::InputHandler {
 public:
 	virtual ~Controller() { }
 	
-	virtual bool HandleEvent( hgeInputEvent &e ) { };
+	virtual bool HandleEvent( hgeInputEvent &e ) { return true; };
 	virtual void Update( float dt ) { }
 };

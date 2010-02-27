@@ -12,6 +12,8 @@ public:
 	void WalkOver();
 	bool IsSeeThrough();
 	
+	bool IsDark() { return is_dark; }
+	
 	void Update( float dt );
 	void Render();
 protected:
@@ -22,6 +24,7 @@ protected:
 	boost::shared_ptr<Sprite> curr_spr;
 	
 	float timer;
+	bool is_dark;
 };
 
 class DarkGrassTile : public GrassTile {
@@ -32,4 +35,14 @@ public:
 class LightGrassTile : public GrassTile {
 public:
 	LightGrassTile( Vec2D pos, boost::shared_ptr<SpriteLoader> spr_loader );
+};
+
+class GeekDarkGrassTile : public GrassTile {
+public:
+	GeekDarkGrassTile( Vec2D pos, boost::shared_ptr<SpriteLoader> spr_loader );
+};
+
+class GeekLightGrassTile : public GrassTile {
+public:
+	GeekLightGrassTile( Vec2D pos, boost::shared_ptr<SpriteLoader> spr_loader );
 };
