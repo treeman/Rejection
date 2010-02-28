@@ -44,8 +44,8 @@ bool BlowerTrap::IsActive()
 void BlowerTrap::Render()
 {
 	float rotation = 0;
-	if( dir == Vec2D::left ) rotation = 3 * math::PI_2;
-	else if( dir == Vec2D::right ) rotation = math::PI_2;
+	if( dir == Vec2D::left ) rotation = math::PI_2;
+	else if( dir == Vec2D::right ) rotation = 3 * math::PI_2;
 	else if( dir == Vec2D::up ) rotation = math::PI;
 	else if( dir == Vec2D::down ) rotation = 0;
 	
@@ -64,8 +64,8 @@ bool MagnetTrap::IsSeeThrough() { return false; }
 void MagnetTrap::Render()
 {
 	float rotation = 0;
-	if( dir == Vec2D::left ) rotation = 3 * math::PI_2;
-	else if( dir == Vec2D::right ) rotation = math::PI_2;
+	if( dir == Vec2D::left ) rotation = math::PI_2;
+	else if( dir == Vec2D::right ) rotation = 3 * math::PI_2;
 	else if( dir == Vec2D::up ) rotation = math::PI;
 	else if( dir == Vec2D::down ) rotation = 0;
 	

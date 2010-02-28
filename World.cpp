@@ -86,19 +86,19 @@ void World::BuyTrap( boost::shared_ptr<Trap> trap )
 		
 	if( dude->FacesLeft() ) { 
 		action_pos = GridPos( dude_pos.x - 1, dude_pos.y );
-		trap->FaceLeft();
+		trap->FaceRight();
 	}
 	else if( dude->FacesRight() ) { 
 		action_pos = GridPos( dude_pos.x + 1, dude_pos.y ); 
-		trap->FaceRight();
+		trap->FaceLeft();
 	}
 	else if( dude->FacesUp() ) { 
 		action_pos = GridPos( dude_pos.x, dude_pos.y - 1 ); 
-		trap->FaceUp();
+		trap->FaceDown();
 	}
 	else if( dude->FacesDown() ) { 
 		action_pos = GridPos( dude_pos.x, dude_pos.y + 1 ); 
-		trap->FaceDown();
+		trap->FaceUp();
 	}
 	
 	//check our funds
