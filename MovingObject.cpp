@@ -21,7 +21,7 @@ void MovingObject::StopAt( Vec2D target )
 void MovingObject::MoveStop()
 {
 	wants_stop = true;
-	last_move.Restart();
+	AMove();
 }
 void MovingObject::MoveLeft()
 {
@@ -33,7 +33,7 @@ void MovingObject::MoveLeft()
 	else {
 		NextLeft();
 	}
-	last_move.Restart();
+	AMove();
 }
 void MovingObject::MoveRight()
 {
@@ -45,7 +45,7 @@ void MovingObject::MoveRight()
 	else {
 		NextRight();
 	}
-	last_move.Restart();
+	AMove();
 }
 void MovingObject::MoveUp()
 {
@@ -57,7 +57,7 @@ void MovingObject::MoveUp()
 	else {
 		NextUp();
 	}
-	last_move.Restart();
+	AMove();
 }
 void MovingObject::MoveDown()
 {
@@ -69,7 +69,7 @@ void MovingObject::MoveDown()
 	else {
 		NextDown();
 	}
-	last_move.Restart();
+	AMove();
 }
 bool MovingObject::IsMoving()
 {
@@ -215,4 +215,9 @@ void MovingObject::NextDown()
 {
 	next_move = Vec2D::down;
 	MoveStop();
+}
+
+void MovingObject::AMove()
+{
+	last_move.Restart();
 }

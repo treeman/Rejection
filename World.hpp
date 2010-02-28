@@ -21,9 +21,14 @@ public:
 	
 	void AddListener( WorldListener *l );
 	
+	bool GameComplete();
+	bool GameOver();
+	
 	void Update( float dt );
 	void Render();
 private:
+	void UpdateDude( boost::shared_ptr<Dude> o, float dt );
+
 	void UpdatePerson( boost::shared_ptr<Person> o, float dt );
 	void RenderPerson( boost::shared_ptr<Person> o );
 	
@@ -67,6 +72,9 @@ private:
 	
 	typedef std::vector<WorldListener*> Listeners;
 	Listeners listeners;
+	
+	boost::shared_ptr<Sprite> dude_working;
+	bool WorkingOnTimeMachine();
 	
 	void InitDebug();
 	boost::shared_ptr<Tree::Dator<bool> > show_mouse_grid;

@@ -16,3 +16,7 @@ dude_speed = 200
 -- grass growth :o
 grass_lvl2_grow_time = 4.0
 grass_lvl3_grow_time = 8.0
+
+-- time machine construction rate
+--time_machine_contruction_rate = 0.005
+time_machine_contruction_rate = 0.05

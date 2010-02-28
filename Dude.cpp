@@ -12,6 +12,8 @@ Dude::Dude( boost::shared_ptr<SpriteLoader> spr_loader )
 	curr_spr = spr_loader->Get( "dude_front" );
 	spr_map[ "dude_front" ] = curr_spr;
 	
+	wants_action = false;
+	
 	fnt.reset( new hgeFont( "fnt/arial10.fnt" ) );
 	
 	debug_dude.reset( new Tree::Dator<bool>( false ) );
@@ -38,6 +40,19 @@ void Dude::FaceUp()
 void Dude::FaceDown()
 {
 	curr_spr = spr_map["dude_front"];
+}
+
+bool Dude::WantsAction()
+{
+	return wants_action;
+}
+void Dude::DoAction()
+{
+	wants_action = true;
+}
+void Dude::CancelAction()
+{
+	wants_action = false;
 }
 
 void Dude::Update( float dt )

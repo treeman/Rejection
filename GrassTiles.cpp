@@ -5,6 +5,7 @@
 GrassTile::GrassTile( Vec2D pos ) : Tile( pos )
 {
 	timer = TWEAKS->GetFloat( "grass_lvl3_grow_time" );
+	walk_eff.Load( "sound/footstep_grass.wav" );
 }
 
 void GrassTile::WalkOver()
@@ -21,10 +22,15 @@ void GrassTile::Update( float dt )
 {
 	timer += dt;
 	
+	if( attachment ) timer = 0;
+	
 	const float lvl2 = TWEAKS->GetFloat( "grass_lvl2_grow_time" );
 	const float lvl3 = TWEAKS->GetFloat( "grass_lvl3_grow_time" );
 	
-	if( timer <= lvl2 ) { curr_spr = lvl1_spr; }
+	if( timer <= lvl2 ) { 
+		if( curr_spr != lvl1_spr ) PlayWalk();
+		curr_spr = lvl1_spr;
+	}
 	else if( timer <= lvl3 ) { curr_spr = lvl2_spr; }
 	else { curr_spr = lvl3_spr; }
 }
@@ -32,6 +38,11 @@ void GrassTile::Update( float dt )
 void GrassTile::Render()
 {
 	if( curr_spr ) curr_spr->spr->Render( (int)pos.x, (int)pos.y );
+}
+
+void GrassTile::PlayWalk()
+{
+	hge->Effect_PlayEx( walk_eff, 70 );
 }
 
 DarkGrassTile::DarkGrassTile( Vec2D pos, boost::shared_ptr<SpriteLoader> spr_loader ) : GrassTile( pos )

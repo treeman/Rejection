@@ -5,9 +5,11 @@
 #include "Hge/Hge.hpp"
 #include "Tree/GameState.hpp"
 
+#include "Tracks.hpp"
 #include "World.hpp"
 #include "DudeController.hpp"
 #include "InfoBar.hpp"
+#include "GameComplete.hpp"
 
 class Game : public Tree::GameState {
 public:
@@ -25,4 +27,6 @@ private:
 	boost::shared_ptr<World> world;
 	boost::shared_ptr<Controller> dude_controller;
 	boost::shared_ptr<InfoBar> info_bar;
+	boost::shared_ptr<Tracks> tracks;
+	boost::shared_ptr<GameComplete> game_complete;
 };

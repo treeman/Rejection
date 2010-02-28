@@ -3,6 +3,7 @@
 #include <boost/foreach.hpp>
 #include "Tree/Log.hpp"
 #include "GrassTiles.hpp"
+#include "Tweaks.hpp"
 
 World::World( boost::shared_ptr<SpriteLoader> _spr_loader ) : grid( 0, 32, 25, 30, 32, 18 ),
 	spr_loader( _spr_loader )
@@ -23,6 +24,8 @@ World::World( boost::shared_ptr<SpriteLoader> _spr_loader ) : grid( 0, 32, 25, 3
 	
 	tiles[14][0]->Attach( time_machine );
 	
+	dude_working = spr_loader->Get( "hm" );
+	
 	InitDebug();
 }
 
@@ -36,6 +39,15 @@ void World::AddListener( WorldListener *l )
 	listeners.push_back( l );
 }
 
+bool World::GameComplete()
+{
+	return time_machine->GetCompletePerc() > 0.99;
+}
+bool World::GameOver()
+{
+	return false;
+}
+
 void World::Update( float dt )
 {
 	girl_controller->Update( dt );
@@ -43,7 +55,7 @@ void World::Update( float dt )
 	BOOST_FOREACH( boost::shared_ptr<Girl> girl, girls ) {
 		UpdatePerson( girl, dt );
 	}
-	UpdatePerson( dude, dt );
+	UpdateDude( dude, dt );
 	
 	for( size_t x = 0; x < tiles.size(); ++x ) {
 		for( size_t y = 0; y < tiles[x].size(); ++y ) {
@@ -84,6 +96,11 @@ void World::Render()
 	}
 	
 	time_machine->Render();
+	if( WorkingOnTimeMachine() ) {
+		Vec2D pos( time_machine->GetPos() );
+		pos.x += 6;
+		dude_working->spr->Render( pos.x, pos.y );
+	}
 	
 	BOOST_FOREACH( boost::shared_ptr<Girl> girl, girls ) {
 		RenderPerson( girl );
@@ -109,6 +126,19 @@ void World::Render()
 		Vec2D gpos = grid.ConvertToScreen( grid_pos );
 		fnt->printf( 750, 5, HGETEXT_RIGHT, "dude_grid:%i,%i=>%.0f,%.0f", grid_pos.x, grid_pos.y,
 			gpos.x, gpos.y );
+	}
+	
+	float complete = time_machine->GetCompletePerc();
+	fnt->printf( 700, 10, HGETEXT_LEFT, "complete: %.2f", complete );
+}
+
+void World::UpdateDude( boost::shared_ptr<Dude> dude, float dt )
+{
+	UpdatePerson( dude, dt );
+
+	if( WorkingOnTimeMachine() ) {
+		time_machine->SetCompletePerc( TWEAKS->GetFloat( "time_machine_contruction_rate" ) * dt +
+			time_machine->GetCompletePerc() );
 	}
 }
 
@@ -340,6 +370,22 @@ bool World::IsSeeThrough( int x, int y )
 bool World::IsValid( int x, int y )
 {
 	return x >= 0 && x < grid.GetColumns() && y >= 0 && y < grid.GetRows();
+}
+
+bool World::WorkingOnTimeMachine()
+{
+	if( dude->WantsAction() ) {
+		const GridPos grid_pos = grid.ConvertToGrid( dude->Bounds().GetCenter() );
+		GridPos action_pos;
+		
+		if( dude->FacesLeft() ) { action_pos = GridPos( grid_pos.x - 1, grid_pos.y ); }
+		else if( dude->FacesRight() ) { action_pos = GridPos( grid_pos.x + 1, grid_pos.y ); }
+		else if( dude->FacesUp() ) { action_pos = GridPos( grid_pos.x, grid_pos.y - 1 ); }
+		else if( dude->FacesDown() ) { action_pos = GridPos( grid_pos.x, grid_pos.y + 1 ); }
+		
+		return action_pos == grid.ConvertToGrid( time_machine->GetPos() );
+	}
+	else { return false; }
 }
 
 void World::InitDebug()

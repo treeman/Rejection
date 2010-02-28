@@ -25,6 +25,11 @@ protected:
 	
 	float timer;
 	bool is_dark;
+	
+	void PlayWalk();
+	EffectObj walk_eff;
+	
+	HgeObj hge;
 };
 
 class DarkGrassTile : public GrassTile {

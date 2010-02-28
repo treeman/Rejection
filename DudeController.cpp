@@ -22,6 +22,9 @@ bool DudeController::HandleEvent( hgeInputEvent &e )
 			case HGEK_DOWN:
 				dude->MoveDown();
 				break;
+			case HGEK_SPACE:
+				dude->DoAction();
+				break;
 		}
 	}
 	else if( e.type == INPUT_KEYUP ) {
@@ -37,6 +40,9 @@ bool DudeController::HandleEvent( hgeInputEvent &e )
 				break;
 			case HGEK_DOWN:
 				if( dude->WantsDown() ) dude->MoveStop();
+				break;
+			case HGEK_SPACE:
+				dude->CancelAction();
 				break;
 		}
 	}

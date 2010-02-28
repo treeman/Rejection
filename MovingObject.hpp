@@ -90,4 +90,6 @@ protected:
 	bool is_paused;
 	Tree::Timer pause_timer;
 	float pause_time;
+	
+	void AMove();
 };

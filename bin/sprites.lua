@@ -90,7 +90,10 @@ sprites = {
         x = 0, y = 0, w = 800, h = 30, },  
         
     -- time machine
-    {   name = "timemachine",
+    {   name = "time_machine",
         path = "gfx/objects.png",
         x = 4 * box, y = 2 * box, w = box, h = box, },
+    {   name = "hm",
+        path = "gfx/objects.png",
+        x = 1 * box, y = 1 * box, w = box, h = box, },
 }

@@ -10,10 +10,15 @@ Game::Game() : spr_loader( new SpriteLoader() )
 	spr_loader->Load( "sprites.lua" );
 	world.reset( new World( spr_loader ) );
 	dude_controller.reset( new DudeController( world->GetDude() ) );
+	
 	info_bar.reset( new InfoBar( spr_loader ) );
 	info_bar->SetLife( 5 );
-	
 	world->AddListener( info_bar.get() );
+	
+	tracks.reset( new Tracks() );
+	tracks->Play();
+	
+	game_complete.reset( new GameComplete() );
 }
 Game::~Game()
 {
@@ -29,18 +34,37 @@ bool Game::HandleEvent( hgeInputEvent &event )
 		}
 	}
 	
-	dude_controller->HandleEvent( event );
+	if( game_complete->IsActive() ) {
+		game_complete->HandleEvent( event );
+	}
+	else {
+		dude_controller->HandleEvent( event );
+	}
 	
 	return true;
 }
 
 void Game::Update( float dt )
 {
-	dude_controller->Update( dt );
-	world->Update( dt );
+	if( game_complete->IsActive() ) {
+		game_complete->Update( dt );
+	}
+	else {
+		dude_controller->Update( dt );
+		world->Update( dt );
+		
+		if( world->GameComplete() ) {
+			game_complete->Play( true );
+		}
+		else if( world->GameOver() ) {
+			game_complete->Play( false );
+		}
+	}
 }
 void Game::Render()
 {
-	world->Render();
 	info_bar->Render();
+	world->Render();
+	
+	game_complete->Render();
 }
