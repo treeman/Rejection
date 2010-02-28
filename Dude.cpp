@@ -44,11 +44,11 @@ void Dude::FaceDown()
 
 bool Dude::WantsAction()
 {
-	return wants_action;
+	return wants_action && !IsMoving();
 }
 void Dude::DoAction()
 {
-	wants_action = true;
+	if( !IsMoving() ) wants_action = true;
 }
 void Dude::CancelAction()
 {

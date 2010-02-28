@@ -96,4 +96,9 @@ sprites = {
     {   name = "hm",
         path = "gfx/objects.png",
         x = 1 * box, y = 1 * box, w = box, h = box, },
+        
+    -- menu 
+    {   name = "menu_pointer",
+        path = "gfx/objects.png",
+        x = 0 * box, y = 1 * box, w = box, h = box, },
 }

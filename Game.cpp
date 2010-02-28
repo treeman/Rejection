@@ -18,7 +18,7 @@ Game::Game() : spr_loader( new SpriteLoader() )
 	tracks.reset( new Tracks() );
 	tracks->Play();
 	
-	game_complete.reset( new GameComplete( world.get() ) );
+	game_complete.reset( new GameComplete( world.get(), spr_loader ) );
 }
 Game::~Game()
 {
