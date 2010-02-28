@@ -61,6 +61,21 @@ bool World::GameOver()
 	return false;
 }
 
+bool World::IsDudeFacingBuildableTile()
+{
+	const GridPos grid_pos = grid.ConvertToGrid( dude->Bounds().GetCenter() );
+	
+	GridPos action_pos;
+		
+	if( dude->FacesLeft() ) { action_pos = GridPos( grid_pos.x - 1, grid_pos.y ); }
+	else if( dude->FacesRight() ) { action_pos = GridPos( grid_pos.x + 1, grid_pos.y ); }
+	else if( dude->FacesUp() ) { action_pos = GridPos( grid_pos.x, grid_pos.y - 1 ); }
+	else if( dude->FacesDown() ) { action_pos = GridPos( grid_pos.x, grid_pos.y + 1 ); }
+	
+	return action_pos != grid.ConvertToGrid( time_machine->GetPos() ) &&
+		IsValid( action_pos );
+}
+
 void World::Update( float dt )
 {
 	girl_controller->Update( dt );

@@ -101,4 +101,23 @@ sprites = {
     {   name = "menu_pointer",
         path = "gfx/objects.png",
         x = 0 * box, y = 1 * box, w = box, h = box, },
+        
+    -- build menu
+    {   name = "build_background",
+        path = "gfx/build_overlay.png",
+        x = 0, y = 0, w = 168, h = 51, },
+    {   name = "trap_highlight",
+        path = "gfx/objects.png",
+        x = 5 * box, y = 2 * box, w = box, h = box, },
+    {   name = "trap_cancel",
+        path = "gfx/objects.png",
+        x = 3 * box, y = 3 * box, w = box, h = box, },
+    
+    -- traps
+    {   name = "magnet_trap",
+        path = "gfx/objects.png",
+        x = 1 * box, y = 2 * box, w = box, h = box, },
+    {   name = "blower_trap",
+        path = "gfx/objects.png",
+        x = 2 * box, y = 2 * box, w = box, h = box, },
 }

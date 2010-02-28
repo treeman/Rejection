@@ -19,6 +19,7 @@ Game::Game() : spr_loader( new SpriteLoader() )
 	tracks->Play();
 	
 	game_complete.reset( new GameComplete( world.get(), spr_loader ) );
+	build_overlay.reset( new BuildOverlay( world.get(), spr_loader, Vec2D( 624, 35 ) ) );
 }
 Game::~Game()
 {
@@ -38,7 +39,9 @@ bool Game::HandleEvent( hgeInputEvent &event )
 		game_complete->HandleEvent( event );
 	}
 	else {
-		dude_controller->HandleEvent( event );
+		if( build_overlay->HandleEvent( event ) ) {
+			dude_controller->HandleEvent( event );
+		}
 	}
 	
 	return true;
@@ -50,6 +53,7 @@ void Game::Update( float dt )
 		game_complete->Update( dt );
 	}
 	else {
+		build_overlay->Update( dt );
 		dude_controller->Update( dt );
 		world->Update( dt );
 		
@@ -65,6 +69,7 @@ void Game::Render()
 {
 	info_bar->Render();
 	world->Render();
+	build_overlay->Render();
 	
 	if( game_complete->IsActive() ) {
 		game_complete->Render();

@@ -58,6 +58,7 @@ void Dude::CancelAction()
 void Dude::Update( float dt )
 {
 	UpdateMovement( dt );
+	if( IsMoving() ) CancelAction();
 }
 void Dude::Render()
 {

@@ -26,6 +26,8 @@ public:
 	bool GameComplete();
 	bool GameOver();
 	
+	bool IsDudeFacingBuildableTile();
+	
 	void Update( float dt );
 	void Render();
 private:
