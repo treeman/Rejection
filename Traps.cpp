@@ -11,9 +11,34 @@ BlowerTrap::BlowerTrap( boost::shared_ptr<SpriteLoader> spr_loader )
 bool BlowerTrap::IsWalkable() { return false; }
 bool BlowerTrap::IsSeeThrough() { return false; }
 
+int BlowerTrap::GetBlowLength()
+{
+	if( IsActive() ) {
+		return (int)TWEAKS->GetFloat( "blower_length" );
+	}
+	else { return 0; }
+}
+Vec2D BlowerTrap::GetBlowDir()
+{
+	return GetFaceDir();
+}
+
 void BlowerTrap::Activate()
 {
-	L_ << "blower activated!!";
+	t.Restart();
+}
+void BlowerTrap::Deactivate()
+{
+	t.Stop();
+}
+
+bool BlowerTrap::IsActive()
+{
+	if( t.IsStarted() && t.GetTime() < TWEAKS->GetFloat( "blower_activation_time" ) ) {
+//		L_ << "oh blower is active alright!!";
+		return true;
+	}
+	else { return false; }
 }
 
 void BlowerTrap::Render()
@@ -65,6 +90,7 @@ int PressurePad::GetActivationRadius()
 void PressurePad::Activate()
 {
 	t.Restart();
+//	L_ << "pressure pad activated!!";
 }
 void PressurePad::Deactivate()
 {
@@ -72,7 +98,8 @@ void PressurePad::Deactivate()
 }
 bool PressurePad::IsActive()
 {
-	if( t.IsStarted() && t.GetTime() > TWEAKS->GetFloat( "pressure_pad_activation_time" ) ) {
+	if( t.IsStarted() && t.GetTime() < TWEAKS->GetFloat( "pressure_pad_activation_time" ) ) {
+//		L_ << "yes pressure pad is active";
 		return true;
 	}
 	else { return false; }

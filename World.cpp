@@ -13,10 +13,6 @@ World::World( boost::shared_ptr<SpriteLoader> _spr_loader ) : grid( 0, 32, 25, 3
 	dude.reset( new Dude( spr_loader ) );
 	girl_controller.reset( new GirlController() );
 	
-//	for( int n = 0; n < 5; ++n ) {
-//		SpawnGirl();
-//	}
-	
 	time_machine.reset( new TimeMachine( spr_loader ) );
 	dude_working = spr_loader->Get( "hm" );
 	
@@ -52,6 +48,10 @@ void World::NewGame()
 	time_machine->SetCompletePerc( 0 );
 	time_machine->SetPos( grid.ConvertToScreen( GridPos( 14, 0 ) ) );
 	tiles[14][0]->Attach( time_machine );
+	
+	for( int n = 0; n < 10; ++n ) {
+		SpawnGirl();
+	}
 }
 
 bool World::GameComplete()
@@ -108,30 +108,114 @@ void World::BuyTrap( boost::shared_ptr<Trap> trap )
 	}
 }
 
+//don't ask
+struct BlowPos {
+	GridPos pos;
+	Vec2D dir;
+};
+
 void World::Update( float dt )
 {
 	girl_controller->Update( dt );
 	
-	typedef std::vector<Vec2D> Positions;
+	typedef std::vector<GridPos> Positions;
 	Positions activate_trap_on;
 	
+	typedef std::vector<BlowPos> BlowPositions;
+	BlowPositions blow_positions;
+	
+	//update the traps
 	BOOST_FOREACH( boost::shared_ptr<Trap> trap, traps ) {
 		const GridPos grid_pos = grid.ConvertToGrid( trap->GetPos() );
 		
-		int activation_radius = trap->GetActivationRadius();
-		if( activation_radius != 0 ) {
+		//add positions to activate
+		const int activation_radius = trap->GetActivationRadius();
+		if( activation_radius > 0 ) {
 			for( int x = grid_pos.x - activation_radius; x < grid_pos.x + activation_radius; ++x ) {
 				for( int y = grid_pos.y - activation_radius; y < grid_pos.y + activation_radius; ++y ) {
 					if( grid_pos.x == x && grid_pos.y == y ) { continue; }
-					else { activate_trap_on.push_back( Vec2D( x, y ) ); }
+					else { activate_trap_on.push_back( GridPos( x, y ) ); }
+				}
+			}
+		}
+		
+		//set blowing on tiles
+		const int blow_length = trap->GetBlowLength();
+		if( blow_length > 0 ) {
+//			L_ << "found something with blow length!";
+			
+			const Vec2D blow_dir = trap->GetBlowDir();
+			const Vec2D face_dir = trap->GetFaceDir();
+			
+			GridPos begin_pos;
+			int end_pos;
+			
+			if( face_dir.x != 0 ) 
+			{
+				if( face_dir == Vec2D::left ) {
+					begin_pos.x = grid_pos.x - 1;
+					begin_pos.y = grid_pos.y;
+					end_pos = begin_pos.x - blow_length;
+				}
+				else if( face_dir == Vec2D::right ) {
+					begin_pos.x = grid_pos.x + 1;
+					begin_pos.y = grid_pos.y;
+					end_pos = begin_pos.x + blow_length;
+				}
+				
+				for( int x = begin_pos.x; x < end_pos; x += face_dir.x ) {
+					BlowPos p;
+					p.dir = blow_dir;
+					p.pos = GridPos( x, begin_pos.y );
+					if( IsWalkable( p.pos ) ) {
+						blow_positions.push_back( p );
+					}
+				}
+			}
+			else if( face_dir.y != 0 ) 
+			{
+				if( face_dir == Vec2D::up ) {
+					begin_pos.x = grid_pos.x;
+					begin_pos.y = grid_pos.y - 1;
+					end_pos = begin_pos.y - blow_length;
+				}
+				else if( face_dir == Vec2D::down ) {
+					begin_pos.x = grid_pos.x;
+					begin_pos.y = grid_pos.y + 1;
+					end_pos = begin_pos.y + blow_length;
+				}
+				
+				for( int y = begin_pos.y; y < end_pos; y += face_dir.y ) {
+					BlowPos p;
+					p.dir = blow_dir;
+					p.pos = GridPos( begin_pos.x, y );
+					if( IsWalkable( p.pos ) ) {
+						blow_positions.push_back( p );
+					}
 				}
 			}
 		}
 	}
 	
+//	if( !activate_trap_on.empty() ) {
+//		L_ << "here they are:";
+//		BOOST_FOREACH( GridPos p, activate_trap_on ) {
+//			L_ << p.x << "," << p.y;
+//		}
+//	}
+
+//	if( !blow_positions.empty() ) {
+//		L_ << "blow positions: " ;
+//		BOOST_FOREACH( BlowPos p, blow_positions ) {
+//			L_ << p.pos.x << "," << p.pos.y;
+//		}
+//	}
+	
+	//update the tiles
 	for( size_t x = 0; x < tiles.size(); ++x ) {
 		for( size_t y = 0; y < tiles[x].size(); ++y ) {
 			const TilePtr tile = tiles[x][y];
+			const GridPos grid_pos = grid.ConvertToGrid( tile->GetPos() );
 			
 			if( dude->Bounds().Intersects( tile->Bounds() ) )
 			{
@@ -146,11 +230,36 @@ void World::Update( float dt )
 				}
 			}
 			
+			//update blowing
+			if( tile->IsWalkable() ) {
+				BlowPositions::iterator it;
+				for( it = blow_positions.begin(); it != blow_positions.end(); ++it ) {
+					if( it->pos == grid_pos ) break;
+				}
+					
+				if( it != blow_positions.end() ) {
+					tile->SetFlowDirection( it->dir );
+					blow_positions.erase( it );
+				}
+				else {
+					tile->ClearFlow();
+				}
+			}
+			else {
+				tile->ClearFlow();
+			}
+			
+			//activate attachments
 			if( tile->Attachment() ) {
+//				if( !activate_trap_on.empty() ) {
+//					GridPos p = grid.ConvertToGrid( tile->Attachment()->GetPos() );
+//					L_ << "here's something: " << p.x << "," << p.y;
+//				}
 				Positions::iterator it = std::find( activate_trap_on.begin(), 
-					activate_trap_on.end(), tile->Attachment()->GetPos() );
+					activate_trap_on.end(), grid_pos );
 													
 				if( it != activate_trap_on.end() ) {
+//					L_ << "oh, something found!!!";
 					tile->Attachment()->Activate();
 					activate_trap_on.erase( it );
 				}

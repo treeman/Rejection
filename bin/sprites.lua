@@ -127,5 +127,6 @@ sprites = {
     -- flow
     {   name = "flow",
         path = "gfx/objects.png",
+        color = 0xffa7d278,
         x = 1 * box, y = 0 * box, w = box, h = box, },
 }

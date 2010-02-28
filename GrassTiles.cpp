@@ -50,6 +50,7 @@ void GrassTile::Render()
 {
 	if( curr_spr ) curr_spr->spr->Render( (int)pos.x, (int)pos.y );
 	if( attachment) attachment->Render();
+	RenderFlow();
 }
 
 void GrassTile::PlayWalk()

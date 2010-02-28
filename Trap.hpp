@@ -25,6 +25,10 @@ public:
 	void FaceUp();
 	void FaceDown();
 	
+	Vec2D GetFaceDir();
+	virtual int GetBlowLength() { return 0; }
+	virtual Vec2D GetBlowDir() { return Vec2D::zero; }
+	
 	virtual int GetActivationRadius() { return 0; }
 	
 	virtual void Activate() { is_active = true; }

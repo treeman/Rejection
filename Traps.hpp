@@ -11,11 +11,18 @@ public:
 	bool IsWalkable();
 	bool IsSeeThrough();
 	
+	int GetBlowLength();
+	Vec2D GetBlowDir();
+	
 	void Activate();
+	void Deactivate();
+	
+	bool IsActive();
 	
 	void Render();
 private:
 	boost::shared_ptr<Sprite> spr;
+	Tree::Timer t;
 };
 
 class MagnetTrap : public Trap {
@@ -24,10 +31,14 @@ public:
 	
 	bool IsWalkable();
 	bool IsSeeThrough();
+//	
+//	int GetBlowLength();
+//	Vec2D GetBlowDir();
 	
 	void Render();
 private:
 	boost::shared_ptr<Sprite> spr;
+	Tree::Timer t;
 };
 
 class PressurePad : public Trap {
