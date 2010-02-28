@@ -27,12 +27,19 @@ BuildOverlay::BuildOverlay( World *w, boost::shared_ptr<SpriteLoader> spr_loader
 
 bool BuildOverlay::HandleEvent( hgeInputEvent &e )
 {
-	if( world->IsDudeFacingBuildableTile() && e.type == INPUT_KEYDOWN && e.key == HGEK_SPACE ) {
-		Activate();
-		return false;
+	//this is really really ugly but hey, it works
+	//should probably initiate and handle it from inside the dude controller
+	//but why change it when it works? well, at least not now when I've got only a few hours left!!!
+	//raaawwrrr
+	if( !is_active ) {
+		if( world->IsDudeFacingBuildableTile() && e.type == INPUT_KEYDOWN && e.key == HGEK_SPACE  ) {
+			Activate();
+			return false;
+		}
+		else {
+			return true;
+		}
 	}
-	
-	if( !is_active ) return true;
 	
 	if( e.type == INPUT_KEYDOWN ) {
 		switch( e.key ) {
@@ -48,6 +55,7 @@ bool BuildOverlay::HandleEvent( hgeInputEvent &e )
 				Right();
 				break;
 			case HGEK_ENTER:
+			case HGEK_SPACE:
 				Action();
 				break;
 		}
@@ -63,6 +71,11 @@ bool BuildOverlay::IsActive()
 void BuildOverlay::Activate()
 {
 	is_active = true;
+	selection_pos = 0;
+}
+void BuildOverlay::Deactivate()
+{
+	is_active = false;
 	selection_pos = 0;
 }
 
@@ -101,5 +114,9 @@ void BuildOverlay::Right()
 }
 void BuildOverlay::Action()
 {
-	if( selection_pos == 0 ) { is_active = false; }
+	if( selection_pos < 1 ) { Deactivate(); }
+	else {
+		world->BuyTrap( trap_factory->CreateTrap( traps[selection_pos - 1]->GetInfo() ) );
+		Deactivate();
+	}
 }

@@ -12,6 +12,7 @@
 #include "GirlController.hpp"
 #include "TimeMachine.hpp"
 #include "WorldListener.hpp"
+#include "Trap.hpp"
 
 class World {
 public:
@@ -26,7 +27,9 @@ public:
 	bool GameComplete();
 	bool GameOver();
 	
+	bool IsDudeFacingRemovableObject();
 	bool IsDudeFacingBuildableTile();
+	void BuyTrap( boost::shared_ptr<Trap> trap );
 	
 	void Update( float dt );
 	void Render();

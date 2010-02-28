@@ -22,6 +22,11 @@ bool GrassTile::IsSeeThrough()
 	if( attachment && attachment->IsSeeThrough() ) return true;
 	else return timer <= TWEAKS->GetFloat( "grass_lvl3_grow_time" );
 }
+bool GrassTile::IsWalkable()
+{
+	if( attachment ) return attachment->IsWalkable();
+	else return true;
+}
 
 void GrassTile::Update( float dt )
 {
@@ -43,6 +48,7 @@ void GrassTile::Update( float dt )
 void GrassTile::Render()
 {
 	if( curr_spr ) curr_spr->spr->Render( (int)pos.x, (int)pos.y );
+	if( attachment) attachment->Render();
 }
 
 void GrassTile::PlayWalk()

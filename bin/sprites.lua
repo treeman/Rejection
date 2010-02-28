@@ -120,4 +120,7 @@ sprites = {
     {   name = "blower_trap",
         path = "gfx/objects.png",
         x = 2 * box, y = 2 * box, w = box, h = box, },
+    {   name = "pressure_pad",
+        path = "gfx/objects.png",
+        x = 3 * box, y = 2 * box, w = box, h = box, },
 }

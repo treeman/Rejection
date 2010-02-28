@@ -13,6 +13,7 @@ public:
 	
 	void WalkOver();
 	bool IsSeeThrough();
+	bool IsWalkable();
 	
 	bool IsDark() { return is_dark; }
 	

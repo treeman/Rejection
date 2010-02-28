@@ -20,6 +20,7 @@ grass_lvl3_grow_time = 8.0
 -- time machine construction rate
 --time_machine_contruction_rate = 0.005
 time_machine_contruction_rate = 1
+time_machine_contruction_cost = 4
 
 -- costs
 button_cost = 100

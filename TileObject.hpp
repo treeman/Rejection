@@ -12,6 +12,11 @@ public:
 	virtual bool IsWalkable() { return true; }
 	virtual bool IsSeeThrough() { return true; }
 	
+	virtual void FaceLeft() { }
+	virtual void FaceRight() { }
+	virtual void FaceUp() { }
+	virtual void FaceDown() { }
+	
 	void SetPos( Vec2D p ) { pos = p; }
 	void SetXPos( float x ) { pos.x = x; }
 	void SetYPos( float y ) { pos.y = y; }

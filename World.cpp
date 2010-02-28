@@ -18,10 +18,6 @@ World::World( boost::shared_ptr<SpriteLoader> _spr_loader ) : grid( 0, 32, 25, 3
 //	}
 	
 	time_machine.reset( new TimeMachine( spr_loader ) );
-	time_machine->SetPos( grid.ConvertToScreen( GridPos( 14, 0 ) ) );
-	
-	tiles[14][0]->Attach( time_machine );
-	
 	dude_working = spr_loader->Get( "hm" );
 	
 	InitDebug();
@@ -41,15 +37,19 @@ void World::AddListener( WorldListener *l )
 
 void World::NewGame()
 {
-	dude->SetPos( grid.ConvertToScreen( GridPos( 5, 0 ) ) );
-	time_machine->SetCompletePerc( 0 );
-	
 	//reset tiles growth
 	for( size_t x = 0; x < grid.GetColumns(); ++x ) {
 		for( size_t y = 0; y < grid.GetRows(); ++y ) {
 			tiles[x][y]->Reset();
+			tiles[x][y]->Detach();
 		}
 	}
+	
+	dude->SetPos( grid.ConvertToScreen( GridPos( 5, 0 ) ) );
+	
+	time_machine->SetCompletePerc( 0 );
+	time_machine->SetPos( grid.ConvertToScreen( GridPos( 14, 0 ) ) );
+	tiles[14][0]->Attach( time_machine );
 }
 
 bool World::GameComplete()
@@ -63,17 +63,46 @@ bool World::GameOver()
 
 bool World::IsDudeFacingBuildableTile()
 {
-	const GridPos grid_pos = grid.ConvertToGrid( dude->Bounds().GetCenter() );
+	const GridPos dude_pos = grid.ConvertToGrid( dude->Bounds().GetCenter() );
 	
 	GridPos action_pos;
 		
-	if( dude->FacesLeft() ) { action_pos = GridPos( grid_pos.x - 1, grid_pos.y ); }
-	else if( dude->FacesRight() ) { action_pos = GridPos( grid_pos.x + 1, grid_pos.y ); }
-	else if( dude->FacesUp() ) { action_pos = GridPos( grid_pos.x, grid_pos.y - 1 ); }
-	else if( dude->FacesDown() ) { action_pos = GridPos( grid_pos.x, grid_pos.y + 1 ); }
+	if( dude->FacesLeft() ) { action_pos = GridPos( dude_pos.x - 1, dude_pos.y ); }
+	else if( dude->FacesRight() ) { action_pos = GridPos( dude_pos.x + 1, dude_pos.y ); }
+	else if( dude->FacesUp() ) { action_pos = GridPos( dude_pos.x, dude_pos.y - 1 ); }
+	else if( dude->FacesDown() ) { action_pos = GridPos( dude_pos.x, dude_pos.y + 1 ); }
 	
 	return action_pos != grid.ConvertToGrid( time_machine->GetPos() ) &&
 		IsValid( action_pos );
+}
+
+void World::BuyTrap( boost::shared_ptr<Trap> trap )
+{
+	const GridPos dude_pos = grid.ConvertToGrid( dude->Bounds().GetCenter() );
+	
+	GridPos action_pos;
+		
+	if( dude->FacesLeft() ) { 
+		action_pos = GridPos( dude_pos.x - 1, dude_pos.y );
+		trap->FaceLeft();
+	}
+	else if( dude->FacesRight() ) { 
+		action_pos = GridPos( dude_pos.x + 1, dude_pos.y ); 
+		trap->FaceRight();
+	}
+	else if( dude->FacesUp() ) { 
+		action_pos = GridPos( dude_pos.x, dude_pos.y - 1 ); 
+		trap->FaceUp();
+	}
+	else if( dude->FacesDown() ) { 
+		action_pos = GridPos( dude_pos.x, dude_pos.y + 1 ); 
+		trap->FaceDown();
+	}
+	
+	//check our funds
+	if( IsValid( action_pos ) && tiles[action_pos.x][action_pos.y]->Attach( trap ) ) {
+		//withdraw funds
+	}
 }
 
 void World::Update( float dt )

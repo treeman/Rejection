@@ -17,6 +17,7 @@ public:
 	
 	bool IsActive();
 	void Activate();
+	void Deactivate();
 	
 	void Update( float dt );
 	void Render();

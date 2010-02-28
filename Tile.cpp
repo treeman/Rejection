@@ -12,8 +12,12 @@ boost::shared_ptr<TileObject> Tile::Attachment()
 
 bool Tile::Attach( boost::shared_ptr<TileObject> a )
 {
-	attachment = a;
-	return true;
+//	if( !attachment ) { return false; }
+//	else {
+		attachment = a;
+		attachment->SetPos( pos );
+		return true;
+//	}
 }
 void Tile::Detach()
 {

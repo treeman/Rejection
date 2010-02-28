@@ -1,6 +1,7 @@
 #pragma once
 
 #include "TileObject.hpp"
+#include "Tree/Vec2D.hpp"
 
 struct TrapInfo {
 	TrapInfo() { Reset(); }
@@ -16,12 +17,24 @@ struct TrapInfo {
 
 class Trap : public TileObject {
 public:
+	Trap();
 	virtual ~Trap() { }
 	
-	int GetCost();
+	void FaceLeft();
+	void FaceRight();
+	void FaceUp();
+	void FaceDown();
+	
+	int GetActivationRadius() { return 0; }
+	
+	virtual void Activate() { is_active = true; }
+	virtual void Deactivate() { is_active = false; }
+	
+	virtual bool IsActive() { return is_active; }
 	
 	void SetInfo( TrapInfo i ) { info = i; }
 	TrapInfo GetInfo() { return info; }
 protected:
 	TrapInfo info;
+	Vec2D dir;
 };

@@ -15,6 +15,11 @@ TrapFactory::TrapFactory( boost::shared_ptr<SpriteLoader> l ) :
 	i.cost = TWEAKS->GetFloat( "blower_cost" );
 	traps.push_back( i );
 	i.Reset();
+	
+	i.name = "pressure_pad";
+	i.cost = TWEAKS->GetFloat( "pressure_pad_cost" );
+	traps.push_back( i );
+	i.Reset();
 }
 
 TrapFactory::Traps TrapFactory::GetTraps()
@@ -31,6 +36,10 @@ boost::shared_ptr<Trap> TrapFactory::CreateTrap( TrapInfo info )
 	}
 	else if( info.name == "blower" ) {
 		trap.reset( new BlowerTrap( spr_loader ) );
+		trap->SetInfo( info );
+	}
+	else if( info.name == "pressure_pad" ) {
+		trap.reset( new PressurePad( spr_loader ) );
 		trap->SetInfo( info );
 	}
 	return trap;
