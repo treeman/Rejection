@@ -31,9 +31,14 @@ public:
 	
 	bool IsWalkable();
 	bool IsSeeThrough();
-//	
-//	int GetBlowLength();
-//	Vec2D GetBlowDir();
+
+	int GetBlowLength();
+	Vec2D GetBlowDir();
+	
+	void Activate();
+	void Deactivate();
+	
+	bool IsActive();
 	
 	void Render();
 private:

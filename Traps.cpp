@@ -61,6 +61,36 @@ MagnetTrap::MagnetTrap( boost::shared_ptr<SpriteLoader> spr_loader )
 bool MagnetTrap::IsWalkable() { return false; }
 bool MagnetTrap::IsSeeThrough() { return false; }
 
+int MagnetTrap::GetBlowLength()
+{
+	if( IsActive() ) {
+		return (int)TWEAKS->GetFloat( "magnet_length" );
+	}
+	else { return 0; }
+}
+Vec2D MagnetTrap::GetBlowDir()
+{
+	return -GetFaceDir();
+}
+
+void MagnetTrap::Activate()
+{
+	t.Restart();
+}
+void MagnetTrap::Deactivate()
+{
+	t.Stop();
+}
+
+bool MagnetTrap::IsActive()
+{
+	if( t.IsStarted() && t.GetTime() < TWEAKS->GetFloat( "magnet_activation_time" ) ) {
+//		L_ << "oh blower is active alright!!";
+		return true;
+	}
+	else { return false; }
+}
+
 void MagnetTrap::Render()
 {
 	float rotation = 0;

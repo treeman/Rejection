@@ -46,6 +46,7 @@ bool DudeController::HandleEvent( hgeInputEvent &e )
 				break;
 		}
 	}
+	return true;
 }
 void DudeController::Update( float dt )
 {

@@ -42,6 +42,7 @@ void World::NewGame()
 	}
 	
 	traps.clear();
+	girls.clear();
 	
 	dude->SetPos( grid.ConvertToScreen( GridPos( 5, 0 ) ) );
 	
@@ -145,82 +146,82 @@ void World::Update( float dt )
 			const Vec2D blow_dir = trap->GetBlowDir();
 			const Vec2D face_dir = trap->GetFaceDir();
 			
-			L_ << "blow_dir: " << blow_dir.x << "," << blow_dir.y;
-			L_ << "face_dir: " << face_dir.x << "," << face_dir.y;
-			
-			L_ << "my_pos: " << grid_pos.x << "," << grid_pos.y;
+//			L_ << "blow_dir: " << blow_dir.x << "," << blow_dir.y;
+//			L_ << "face_dir: " << face_dir.x << "," << face_dir.y;
+//			
+//			L_ << "my_pos: " << grid_pos.x << "," << grid_pos.y;
 			
 			if( face_dir == Vec2D::left ) {
-				L_ << "left blow";
+//				L_ << "left blow";
 				
 				int right = grid_pos.x - 1;
 				int left = right - blow_length;
 				
-				L_ << "l: " << left << " r: " << right;
+//				L_ << "l: " << left << " r: " << right;
 				
 				for( int x = right; x > left; --x ) {
 					BlowPos p;
 					p.dir = blow_dir;
 					p.pos = GridPos( x, grid_pos.y );
 					if( IsWalkable( p.pos ) ) {
-						L_ << "blowing: " << p.pos.x << "," << p.pos.y;
+//						L_ << "blowing: " << p.pos.x << "," << p.pos.y;
 						blow_positions.push_back( p );
 					}
 					else { break; }
 				}
 			}
 			else if( face_dir == Vec2D::right ) {
-				L_ << "right blow";
+//				L_ << "right blow";
 				
 				int left = grid_pos.x + 1;
 				int right = left + blow_length;
 				
-				L_ << "l: " << left << " r: " << right;
+//				L_ << "l: " << left << " r: " << right;
 				
 				for( int x = left; x < right; ++x ) {
 					BlowPos p;
 					p.dir = blow_dir;
 					p.pos = GridPos( x, grid_pos.y );
 					if( IsWalkable( p.pos ) ) {
-						L_ << "blowing: " << p.pos.x << "," << p.pos.y;
+//						L_ << "blowing: " << p.pos.x << "," << p.pos.y;
 						blow_positions.push_back( p );
 					}
 					else { break; }
 				}
 			}
 			else if( face_dir == Vec2D::up ) {
-				L_ << "up blow";
+//				L_ << "up blow";
 				
 				int down = grid_pos.y - 1;
 				int up = down - blow_length;
 				
-				L_ << "u: " << up << " d: " << down;
+//				L_ << "u: " << up << " d: " << down;
 				
 				for( int y = down; y > up; --y ) {
 					BlowPos p;
 					p.dir = blow_dir;
 					p.pos = GridPos( grid_pos.x, y );
 					if( IsWalkable( p.pos ) ) {
-						L_ << "blowing: " << p.pos.x << "," << p.pos.y;
+//						L_ << "blowing: " << p.pos.x << "," << p.pos.y;
 						blow_positions.push_back( p );
 					}
 					else { break; }
 				}
 			}
 			else if( face_dir == Vec2D::down ) {
-				L_ << "down blow";
+//				L_ << "down blow";
 				
 				int up = grid_pos.y + 1;
 				int down = up + blow_length;
 				
-				L_ << "u: " << up << " d: " << down;
+//				L_ << "u: " << up << " d: " << down;
 				
 				for( int y = up; y < down; ++y ) {
 					BlowPos p;
 					p.dir = blow_dir;
 					p.pos = GridPos( grid_pos.x, y );
 					if( IsWalkable( p.pos ) ) {
-						L_ << "blowing: " << p.pos.x << "," << p.pos.y;
+//						L_ << "blowing: " << p.pos.x << "," << p.pos.y;
 						blow_positions.push_back( p );
 					}
 					else { break; }

@@ -33,3 +33,5 @@ pressure_pad_radius = 2
 pressure_pad_activation_time = 1.0
 blower_length = 5
 blower_activation_time = 2.0
+magnet_length = 5
+magnet_activation_time = 2.0
