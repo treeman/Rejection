@@ -35,3 +35,7 @@ blower_length = 5
 blower_activation_time = 2.0
 magnet_length = 5
 magnet_activation_time = 2.0
+
+-- misc
+money = 2000
+trap_money = 40

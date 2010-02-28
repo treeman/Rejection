@@ -29,7 +29,7 @@ public:
 	
 	bool IsDudeFacingRemovableObject();
 	bool IsDudeFacingBuildableTile();
-	void BuyTrap( boost::shared_ptr<Trap> trap );
+	bool BuyTrap( boost::shared_ptr<Trap> trap );
 	
 	void Update( float dt );
 	void Render();
@@ -85,6 +85,13 @@ private:
 	
 	boost::shared_ptr<Sprite> dude_working;
 	bool WorkingOnTimeMachine();
+	
+	void SetMoney( int money );
+	void AddTrapMoney();
+	int money;
+	
+	void SetLife( int life );
+	int life;
 	
 	void InitDebug();
 	boost::shared_ptr<Tree::Dator<bool> > show_mouse_grid;

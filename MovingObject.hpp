@@ -30,6 +30,11 @@ public:
 	void MoveUp();
 	void MoveDown();
 	
+	void PushLeft( float power );
+	void PushRight( float power );
+	void PushUp( float power );
+	void PushDown( float power );
+	
 	bool IsMoving();
 	
 	bool WantsStop();
@@ -92,4 +97,7 @@ protected:
 	float pause_time;
 	
 	void AMove();
+	
+	float push_power;
+	Vec2D push_dir;
 };

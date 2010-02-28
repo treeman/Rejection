@@ -1,6 +1,7 @@
 #pragma once
 
 #include "InfoBar.hpp"
+#include "Tree/Log.hpp"
 
 InfoBar::InfoBar( boost::shared_ptr<SpriteLoader> spr_loader )
 {
@@ -14,10 +15,12 @@ InfoBar::InfoBar( boost::shared_ptr<SpriteLoader> spr_loader )
 void InfoBar::SetLife( int n )
 {
 	life = n;
+	L_ << "life: " << life;
 }
 void InfoBar::SetMoney( int n )
 {
 	money = n;
+	L_ << "money: " << money;
 }
 void InfoBar::Render()
 {

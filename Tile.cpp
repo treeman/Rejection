@@ -4,6 +4,7 @@ Tile::Tile( Vec2D p, boost::shared_ptr<SpriteLoader> spr_loader ) : pos( p )
 {
 	flow = spr_loader->Get( "flow" );
 	flow->spr->SetHotSpot( 16, 16 );
+	flow_power = 0;
 }
 
 boost::shared_ptr<TileObject> Tile::Attachment()
@@ -35,9 +36,20 @@ bool Tile::IsSeeThrough()
 	else return true;
 }
 
-void Tile::SetFlowDirection( Vec2D dir )
+float Tile::GetFlowPower()
 {
-	flow_dir = dir;
+	return flow_power;
+}
+Vec2D Tile::GetFlowDirection()
+{
+	return flow_dir;
+}
+void Tile::SetFlowDirection( Vec2D dir, float power )
+{
+	if( flow_dir == Vec2D::zero || power > flow_power ) {
+		flow_dir = dir;
+		flow_power = power;
+	}
 }
 void Tile::ClearFlow()
 {

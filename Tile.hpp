@@ -25,7 +25,9 @@ public:
 	virtual bool IsWalkable();
 	virtual bool IsSeeThrough();
 	
-	void SetFlowDirection( Vec2D dir );
+	float GetFlowPower();
+	Vec2D GetFlowDirection();
+	void SetFlowDirection( Vec2D dir, float power );
 	void ClearFlow();
 	
 	void SetPos( Vec2D p ) { pos = p; }
@@ -41,6 +43,7 @@ protected:
 	boost::shared_ptr<TileObject> attachment;
 	Vec2D pos;
 	
+	float flow_power;
 	Vec2D flow_dir;
 	boost::shared_ptr<Sprite> flow;
 };

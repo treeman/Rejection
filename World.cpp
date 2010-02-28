@@ -53,6 +53,9 @@ void World::NewGame()
 	for( int n = 0; n < 10; ++n ) {
 		SpawnGirl();
 	}
+	
+	SetMoney( TWEAKS->GetFloat( "money" ) );
+	SetLife( 5 );
 }
 
 bool World::GameComplete()
@@ -79,7 +82,7 @@ bool World::IsDudeFacingBuildableTile()
 		IsValid( action_pos );
 }
 
-void World::BuyTrap( boost::shared_ptr<Trap> trap )
+bool World::BuyTrap( boost::shared_ptr<Trap> trap )
 {
 	const GridPos dude_pos = grid.ConvertToGrid( dude->Bounds().GetCenter() );
 	
@@ -103,9 +106,13 @@ void World::BuyTrap( boost::shared_ptr<Trap> trap )
 	}
 	
 	//check our funds
-	if( IsValid( action_pos ) && tiles[action_pos.x][action_pos.y]->Attach( trap ) ) {
+	if( money >= trap->GetInfo().cost && IsValid( action_pos ) && tiles[action_pos.x][action_pos.y]->Attach( trap ) ) {
 		//withdraw funds
 		traps.push_back( trap );
+		SetMoney( money - trap->GetInfo().cost );
+	}
+	else {
+		return false;
 	}
 }
 
@@ -113,6 +120,7 @@ void World::BuyTrap( boost::shared_ptr<Trap> trap )
 struct BlowPos {
 	GridPos pos;
 	Vec2D dir;
+	float power;
 };
 
 void World::Update( float dt )
@@ -159,10 +167,12 @@ void World::Update( float dt )
 				
 //				L_ << "l: " << left << " r: " << right;
 				
-				for( int x = right; x > left; --x ) {
+				int n = 0;
+				for( int x = right; x > left; --x, ++n ) {
 					BlowPos p;
 					p.dir = blow_dir;
 					p.pos = GridPos( x, grid_pos.y );
+					p.power = 1.0 / n;
 					if( IsWalkable( p.pos ) ) {
 //						L_ << "blowing: " << p.pos.x << "," << p.pos.y;
 						blow_positions.push_back( p );
@@ -178,10 +188,12 @@ void World::Update( float dt )
 				
 //				L_ << "l: " << left << " r: " << right;
 				
-				for( int x = left; x < right; ++x ) {
+				int n = 0;
+				for( int x = left; x < right; ++x, ++n ) {
 					BlowPos p;
 					p.dir = blow_dir;
 					p.pos = GridPos( x, grid_pos.y );
+					p.power = 1.0 / n;
 					if( IsWalkable( p.pos ) ) {
 //						L_ << "blowing: " << p.pos.x << "," << p.pos.y;
 						blow_positions.push_back( p );
@@ -197,10 +209,12 @@ void World::Update( float dt )
 				
 //				L_ << "u: " << up << " d: " << down;
 				
-				for( int y = down; y > up; --y ) {
+				int n = 0;
+				for( int y = down; y > up; --y, ++n ) {
 					BlowPos p;
 					p.dir = blow_dir;
 					p.pos = GridPos( grid_pos.x, y );
+					p.power = 1.0 / n;
 					if( IsWalkable( p.pos ) ) {
 //						L_ << "blowing: " << p.pos.x << "," << p.pos.y;
 						blow_positions.push_back( p );
@@ -216,10 +230,12 @@ void World::Update( float dt )
 				
 //				L_ << "u: " << up << " d: " << down;
 				
-				for( int y = up; y < down; ++y ) {
+				int n = 0;
+				for( int y = up; y < down; ++y, ++n ) {
 					BlowPos p;
 					p.dir = blow_dir;
 					p.pos = GridPos( grid_pos.x, y );
+					p.power = 1.0 / n;
 					if( IsWalkable( p.pos ) ) {
 //						L_ << "blowing: " << p.pos.x << "," << p.pos.y;
 						blow_positions.push_back( p );
@@ -250,15 +266,32 @@ void World::Update( float dt )
 			const TilePtr tile = tiles[x][y];
 			const GridPos grid_pos = grid.ConvertToGrid( tile->GetPos() );
 			
+			const Vec2D flow_dir = tile->GetFlowDirection();
+			const float flow_power = tile->GetFlowPower();
+			
 			if( dude->Bounds().Intersects( tile->Bounds() ) )
 			{
 				tile->WalkOver();
+				
+				if( flow_dir != Vec2D::zero ) {
+					if( flow_dir == Vec2D::left ) dude->PushLeft( flow_power );
+					else if( flow_dir == Vec2D::right ) dude->PushRight( flow_power );
+					else if( flow_dir == Vec2D::up ) dude->PushUp( flow_power );
+					else if( flow_dir == Vec2D::down ) dude->PushDown( flow_power );
+					AddTrapMoney();
+				}
 			}
 			else {
 				BOOST_FOREACH( boost::shared_ptr<Girl> girl, girls ) {
 					if( girl->Bounds().Intersects( tile->Bounds() ) )
 					{
 						tile->WalkOver();
+						if( flow_dir != Vec2D::zero ) {
+							if( flow_dir == Vec2D::left ) girl->PushLeft( flow_power );
+							else if( flow_dir == Vec2D::right ) girl->PushRight( flow_power );
+							else if( flow_dir == Vec2D::up ) girl->PushUp( flow_power );
+							else if( flow_dir == Vec2D::down ) girl->PushDown( flow_power );
+						}
 					}
 				}
 			}
@@ -271,7 +304,7 @@ void World::Update( float dt )
 				}
 					
 				if( it != blow_positions.end() ) {
-					tile->SetFlowDirection( it->dir );
+					tile->SetFlowDirection( it->dir, it->power );
 					blow_positions.erase( it );
 				}
 				else {
@@ -639,6 +672,26 @@ bool World::WorkingOnTimeMachine()
 		return action_pos == grid.ConvertToGrid( time_machine->GetPos() );
 	}
 	else { return false; }
+}
+
+void World::SetMoney( int m )
+{
+	money = m;
+	BOOST_FOREACH( WorldListener *l, listeners ) {
+		l->SetMoney( money );
+	}
+}
+void World::AddTrapMoney()
+{
+	SetMoney( money + TWEAKS->GetFloat( "trap_money" ) );
+}
+
+void World::SetLife( int l )
+{
+	life = l;
+	BOOST_FOREACH( WorldListener *l, listeners ) {
+		l->SetLife( life );
+	}
 }
 
 void World::InitDebug()

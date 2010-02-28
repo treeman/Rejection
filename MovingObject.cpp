@@ -6,6 +6,7 @@ MovingObject::MovingObject()
 	is_paused = false;
 	DirFaceDown();
 	last_move.Start();
+	push_power = 0;
 }
 
 Tree::Rect MovingObject::Bounds() const
@@ -70,6 +71,34 @@ void MovingObject::MoveDown()
 		NextDown();
 	}
 	AMove();
+}
+void MovingObject::PushLeft( float power )
+{
+	if( power > push_power ) {
+		push_power = power;
+		push_dir = Vec2D::left;
+	}
+}
+void MovingObject::PushRight( float power )
+{
+	if( power > push_power ) {
+		push_power = power;
+		push_dir = Vec2D::right;
+	}
+}
+void MovingObject::PushUp( float power )
+{
+	if( power > push_power ) {
+		push_power = power;
+		push_dir = Vec2D::up;
+	}
+}
+void MovingObject::PushDown( float power )
+{
+	if( power > push_power ) {
+		push_power = power;
+		push_dir = Vec2D::down;
+	}
 }
 bool MovingObject::IsMoving()
 {
@@ -137,6 +166,15 @@ bool MovingObject::FacesDown()
 
 void MovingObject::UpdateMovement( float dt )
 {
+	if( push_power > 0 ) {
+		MoveStop();
+		if( push_dir == Vec2D::left ) MoveLeft();
+		if( push_dir == Vec2D::right ) MoveRight();
+		if( push_dir == Vec2D::up ) MoveUp();
+		if( push_dir == Vec2D::down ) MoveDown();
+	}
+	push_power = 0;
+	
 	pos += vel * dt;
 	if( is_paused && pause_timer.GetTime() > pause_time ) {
 		Unpause();
