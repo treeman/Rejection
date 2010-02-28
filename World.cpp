@@ -458,7 +458,7 @@ void World::UpdateDude( boost::shared_ptr<Dude> dude, float dt )
 	UpdatePerson( dude, dt );
 
 	if( WorkingOnTimeMachine() ) {
-		const float cost = TWEAKS->GetFloat( "time_machine_construction_cost" ) * dt;
+		const int cost = (int)TWEAKS->GetFloat( "time_machine_construction_cost" ) * dt;
 		if( money >= cost ) {
 			time_machine->SetCompletePerc( TWEAKS->GetFloat( "time_machine_construction_rate" ) * dt +
 				time_machine->GetCompletePerc() );
@@ -736,7 +736,7 @@ void World::SetMoney( int m )
 }
 void World::AddTrapMoney()
 {
-	SetMoney( money + TWEAKS->GetFloat( "trap_money" ) );
+	SetMoney( money + (int)TWEAKS->GetFloat( "trap_money" ) );
 }
 
 void World::SetLife( int l )

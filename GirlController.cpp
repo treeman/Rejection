@@ -141,7 +141,7 @@ bool GirlController::IsClearPath( Vec2D &dir, boost::shared_ptr<Girl> girl )
 			free_paths.push_back( Vec2D::down );
 		}
 		//and check the dir she's facing
-		if( IsFree( my_pos.x + face_dir.x, my_pos.y, vision ) ) {
+		if( IsFree( my_pos.x + (int)face_dir.x, my_pos.y, vision ) ) {
 			free_paths.push_back( face_dir );
 		}
 	}
@@ -155,7 +155,7 @@ bool GirlController::IsClearPath( Vec2D &dir, boost::shared_ptr<Girl> girl )
 			free_paths.push_back( Vec2D::right );
 		}
 		//and check the dir she's facing
-		if( IsFree( my_pos.x, my_pos.y + face_dir.y, vision ) ) {
+		if( IsFree( my_pos.x, my_pos.y + (int)face_dir.y, vision ) ) {
 			free_paths.push_back( face_dir );
 		}
 	}

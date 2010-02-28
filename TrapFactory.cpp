@@ -7,17 +7,17 @@ TrapFactory::TrapFactory( boost::shared_ptr<SpriteLoader> l ) :
 {
 	TrapInfo i;
 	i.name = "magnet";
-	i.cost = TWEAKS->GetFloat( "magnet_cost" );
+	i.cost = (int)TWEAKS->GetFloat( "magnet_cost" );
 	traps.push_back( i );
 	i.Reset();
 	
 	i.name = "blower";
-	i.cost = TWEAKS->GetFloat( "blower_cost" );
+	i.cost = (int)TWEAKS->GetFloat( "blower_cost" );
 	traps.push_back( i );
 	i.Reset();
 	
 	i.name = "pressure_pad";
-	i.cost = TWEAKS->GetFloat( "pressure_pad_cost" );
+	i.cost = (int)TWEAKS->GetFloat( "pressure_pad_cost" );
 	traps.push_back( i );
 	i.Reset();
 }

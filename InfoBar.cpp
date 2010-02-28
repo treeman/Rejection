@@ -1,5 +1,3 @@
-#pragma once
-
 #include "InfoBar.hpp"
 #include "Tree/Log.hpp"
 

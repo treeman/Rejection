@@ -5,7 +5,7 @@
 #include <boost/foreach.hpp>
 
 BuildOverlay::BuildOverlay( World *w, boost::shared_ptr<SpriteLoader> spr_loader, Vec2D p ) :
-	world( w ), is_active( true ), pos( p )
+	world( w ), is_active( false ), pos( p )
 {
 	build_background = spr_loader->Get( "build_background" );
 	trap_shade.reset( new hgeSprite( 0, 0, 0, 32, 32 ) );
