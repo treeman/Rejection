@@ -12,6 +12,10 @@ public:
 	virtual bool IsWalkable() { return true; }
 	virtual bool IsSeeThrough() { return true; }
 	
+	virtual void WalkOver() { }
+	
+	virtual void Activate() { }
+	
 	virtual void FaceLeft() { }
 	virtual void FaceRight() { }
 	virtual void FaceUp() { }

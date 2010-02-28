@@ -6,7 +6,7 @@
 //you have to define the desired grasses
 class GrassTile : public Tile {
 public:
-	GrassTile( Vec2D pos );
+	GrassTile( Vec2D pos, boost::shared_ptr<SpriteLoader> spr_loader );
 	virtual ~GrassTile() { }
 	
 	void Reset();

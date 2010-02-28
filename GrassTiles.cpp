@@ -2,7 +2,7 @@
 #include "Tree/Log.hpp"
 #include "Tweaks.hpp"
 
-GrassTile::GrassTile( Vec2D pos ) : Tile( pos )
+GrassTile::GrassTile( Vec2D pos, boost::shared_ptr<SpriteLoader> spr_loader ) : Tile( pos, spr_loader )
 {
 	timer = TWEAKS->GetFloat( "grass_lvl3_grow_time" );
 	walk_eff.Load( "sound/footstep_grass.wav" );
@@ -16,6 +16,7 @@ void GrassTile::Reset()
 void GrassTile::WalkOver()
 {
 	timer = 0;
+	if( attachment ) attachment->WalkOver();
 }
 bool GrassTile::IsSeeThrough()
 {
@@ -56,7 +57,7 @@ void GrassTile::PlayWalk()
 	hge->Effect_PlayEx( walk_eff, 70 );
 }
 
-DarkGrassTile::DarkGrassTile( Vec2D pos, boost::shared_ptr<SpriteLoader> spr_loader ) : GrassTile( pos )
+DarkGrassTile::DarkGrassTile( Vec2D pos, boost::shared_ptr<SpriteLoader> spr_loader ) : GrassTile( pos, spr_loader )
 {
 	lvl1_spr = spr_loader->Get( "darkgrass_lvl1" );
 	lvl2_spr = spr_loader->Get( "darkgrass_lvl2" );
@@ -65,7 +66,7 @@ DarkGrassTile::DarkGrassTile( Vec2D pos, boost::shared_ptr<SpriteLoader> spr_loa
 	is_dark = true;
 }
 
-LightGrassTile::LightGrassTile( Vec2D pos, boost::shared_ptr<SpriteLoader> spr_loader ) : GrassTile( pos )
+LightGrassTile::LightGrassTile( Vec2D pos, boost::shared_ptr<SpriteLoader> spr_loader ) : GrassTile( pos, spr_loader )
 {
 	lvl1_spr = spr_loader->Get( "lightgrass_lvl1" );
 	lvl2_spr = spr_loader->Get( "lightgrass_lvl2" );
@@ -74,7 +75,7 @@ LightGrassTile::LightGrassTile( Vec2D pos, boost::shared_ptr<SpriteLoader> spr_l
 	is_dark = false;
 }
 
-GeekDarkGrassTile::GeekDarkGrassTile( Vec2D pos, boost::shared_ptr<SpriteLoader> spr_loader ) : GrassTile( pos )
+GeekDarkGrassTile::GeekDarkGrassTile( Vec2D pos, boost::shared_ptr<SpriteLoader> spr_loader ) : GrassTile( pos, spr_loader )
 {
 	lvl1_spr = spr_loader->Get( "geekdarkgrass_lvl1" );
 	lvl2_spr = spr_loader->Get( "geekdarkgrass_lvl2" );
@@ -83,7 +84,7 @@ GeekDarkGrassTile::GeekDarkGrassTile( Vec2D pos, boost::shared_ptr<SpriteLoader>
 	is_dark = true;
 }
 
-GeekLightGrassTile::GeekLightGrassTile( Vec2D pos, boost::shared_ptr<SpriteLoader> spr_loader ) : GrassTile( pos )
+GeekLightGrassTile::GeekLightGrassTile( Vec2D pos, boost::shared_ptr<SpriteLoader> spr_loader ) : GrassTile( pos, spr_loader )
 {
 	lvl1_spr = spr_loader->Get( "geeklightgrass_lvl1" );
 	lvl2_spr = spr_loader->Get( "geeklightgrass_lvl2" );

@@ -25,7 +25,7 @@ public:
 	void FaceUp();
 	void FaceDown();
 	
-	int GetActivationRadius() { return 0; }
+	virtual int GetActivationRadius() { return 0; }
 	
 	virtual void Activate() { is_active = true; }
 	virtual void Deactivate() { is_active = false; }
@@ -37,4 +37,5 @@ public:
 protected:
 	TrapInfo info;
 	Vec2D dir;
+	bool is_active;
 };

@@ -1,4 +1,6 @@
 #include "Traps.hpp"
+#include "Tweaks.hpp"
+#include "Tree/Log.hpp"
 
 BlowerTrap::BlowerTrap( boost::shared_ptr<SpriteLoader> spr_loader )
 {
@@ -8,6 +10,11 @@ BlowerTrap::BlowerTrap( boost::shared_ptr<SpriteLoader> spr_loader )
 
 bool BlowerTrap::IsWalkable() { return false; }
 bool BlowerTrap::IsSeeThrough() { return false; }
+
+void BlowerTrap::Activate()
+{
+	L_ << "blower activated!!";
+}
 
 void BlowerTrap::Render()
 {
@@ -47,6 +54,34 @@ PressurePad::PressurePad( boost::shared_ptr<SpriteLoader> spr_loader )
 
 bool PressurePad::IsWalkable() { return true; }
 bool PressurePad::IsSeeThrough() { return true; }
+
+int PressurePad::GetActivationRadius()
+{
+	if( IsActive() ) {
+		return (int)TWEAKS->GetFloat( "pressure_pad_radius" );
+	}
+	else { return 0; }
+}
+void PressurePad::Activate()
+{
+	t.Restart();
+}
+void PressurePad::Deactivate()
+{
+	t.Stop();
+}
+bool PressurePad::IsActive()
+{
+	if( t.IsStarted() && t.GetTime() > TWEAKS->GetFloat( "pressure_pad_activation_time" ) ) {
+		return true;
+	}
+	else { return false; }
+}
+
+void PressurePad::WalkOver()
+{
+	Activate();
+}
 
 void PressurePad::Render()
 {

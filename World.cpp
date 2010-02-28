@@ -45,6 +45,8 @@ void World::NewGame()
 		}
 	}
 	
+	traps.clear();
+	
 	dude->SetPos( grid.ConvertToScreen( GridPos( 5, 0 ) ) );
 	
 	time_machine->SetCompletePerc( 0 );
@@ -102,6 +104,7 @@ void World::BuyTrap( boost::shared_ptr<Trap> trap )
 	//check our funds
 	if( IsValid( action_pos ) && tiles[action_pos.x][action_pos.y]->Attach( trap ) ) {
 		//withdraw funds
+		traps.push_back( trap );
 	}
 }
 
@@ -109,10 +112,22 @@ void World::Update( float dt )
 {
 	girl_controller->Update( dt );
 	
-	BOOST_FOREACH( boost::shared_ptr<Girl> girl, girls ) {
-		UpdatePerson( girl, dt );
+	typedef std::vector<Vec2D> Positions;
+	Positions activate_trap_on;
+	
+	BOOST_FOREACH( boost::shared_ptr<Trap> trap, traps ) {
+		const GridPos grid_pos = grid.ConvertToGrid( trap->GetPos() );
+		
+		int activation_radius = trap->GetActivationRadius();
+		if( activation_radius != 0 ) {
+			for( int x = grid_pos.x - activation_radius; x < grid_pos.x + activation_radius; ++x ) {
+				for( int y = grid_pos.y - activation_radius; y < grid_pos.y + activation_radius; ++y ) {
+					if( grid_pos.x == x && grid_pos.y == y ) { continue; }
+					else { activate_trap_on.push_back( Vec2D( x, y ) ); }
+				}
+			}
+		}
 	}
-	UpdateDude( dude, dt );
 	
 	for( size_t x = 0; x < tiles.size(); ++x ) {
 		for( size_t y = 0; y < tiles[x].size(); ++y ) {
@@ -130,9 +145,25 @@ void World::Update( float dt )
 					}
 				}
 			}
+			
+			if( tile->Attachment() ) {
+				Positions::iterator it = std::find( activate_trap_on.begin(), 
+					activate_trap_on.end(), tile->Attachment()->GetPos() );
+													
+				if( it != activate_trap_on.end() ) {
+					tile->Attachment()->Activate();
+					activate_trap_on.erase( it );
+				}
+			}
+			
 			tile->Update( dt );
 		}
 	}
+	
+	BOOST_FOREACH( boost::shared_ptr<Girl> girl, girls ) {
+		UpdatePerson( girl, dt );
+	}
+	UpdateDude( dude, dt );
 	
 	time_machine->Update( dt );
 }

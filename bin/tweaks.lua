@@ -27,3 +27,7 @@ button_cost = 100
 magnet_cost = 50
 blower_cost = 30
 pressure_pad_cost = 50
+
+-- traps
+pressure_pad_radius = 2
+pressure_pad_activation_time = 1.0

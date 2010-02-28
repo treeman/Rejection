@@ -2,6 +2,7 @@
 
 #include "Trap.hpp"
 #include "Sprite.hpp"
+#include "Tree/Timer.hpp"
 
 class BlowerTrap : public Trap {
 public:
@@ -9,6 +10,8 @@ public:
 	
 	bool IsWalkable();
 	bool IsSeeThrough();
+	
+	void Activate();
 	
 	void Render();
 private:
@@ -34,7 +37,16 @@ public:
 	bool IsWalkable();
 	bool IsSeeThrough();
 	
+	int GetActivationRadius();
+	void Activate();
+	void Deactivate();
+	
+	bool IsActive();
+	
+	void WalkOver();
+	
 	void Render();
 private:
 	boost::shared_ptr<Sprite> spr;
+	Tree::Timer t;
 };

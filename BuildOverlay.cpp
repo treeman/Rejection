@@ -107,10 +107,12 @@ void BuildOverlay::Render()
 void BuildOverlay::Left()
 {
 	if( selection_pos > 0 ) --selection_pos;
+	else selection_pos = traps.size();
 }
 void BuildOverlay::Right()
 {
 	if( selection_pos < traps.size() ) ++selection_pos;
+	else selection_pos = 0;
 }
 void BuildOverlay::Action()
 {

@@ -123,4 +123,9 @@ sprites = {
     {   name = "pressure_pad",
         path = "gfx/objects.png",
         x = 3 * box, y = 2 * box, w = box, h = box, },
+        
+    -- flow
+    {   name = "flow",
+        path = "gfx/objects.png",
+        x = 1 * box, y = 0 * box, w = box, h = box, },
 }

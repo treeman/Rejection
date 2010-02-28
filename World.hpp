@@ -75,6 +75,9 @@ private:
 	
 	TileGrid tiles;
 	
+	typedef std::vector<boost::shared_ptr<Trap> > Traps;
+	Traps traps;
+	
 	boost::shared_ptr<TimeMachine> time_machine;
 	
 	typedef std::vector<WorldListener*> Listeners;
