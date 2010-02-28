@@ -11,8 +11,6 @@ World::World( boost::shared_ptr<SpriteLoader> _spr_loader ) : grid( 0, 32, 25, 3
 	InitTiles();
 	
 	dude.reset( new Dude( spr_loader ) );
-	dude->SetPos( grid.ConvertToScreen( GridPos( 5, 0 ) ) );
-	
 	girl_controller.reset( new GirlController() );
 	
 //	for( int n = 0; n < 5; ++n ) {
@@ -27,6 +25,8 @@ World::World( boost::shared_ptr<SpriteLoader> _spr_loader ) : grid( 0, 32, 25, 3
 	dude_working = spr_loader->Get( "hm" );
 	
 	InitDebug();
+	
+	NewGame();
 }
 
 boost::shared_ptr<Dude> World::GetDude()
@@ -37,6 +37,19 @@ boost::shared_ptr<Dude> World::GetDude()
 void World::AddListener( WorldListener *l )
 {
 	listeners.push_back( l );
+}
+
+void World::NewGame()
+{
+	dude->SetPos( grid.ConvertToScreen( GridPos( 5, 0 ) ) );
+	time_machine->SetCompletePerc( 0 );
+	
+	//reset tiles growth
+	for( size_t x = 0; x < grid.GetColumns(); ++x ) {
+		for( size_t y = 0; y < grid.GetRows(); ++y ) {
+			tiles[x][y]->Reset();
+		}
+	}
 }
 
 bool World::GameComplete()

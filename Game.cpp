@@ -18,7 +18,7 @@ Game::Game() : spr_loader( new SpriteLoader() )
 	tracks.reset( new Tracks() );
 	tracks->Play();
 	
-	game_complete.reset( new GameComplete() );
+	game_complete.reset( new GameComplete( world.get() ) );
 }
 Game::~Game()
 {
@@ -66,5 +66,7 @@ void Game::Render()
 	info_bar->Render();
 	world->Render();
 	
-	game_complete->Render();
+	if( game_complete->IsActive() ) {
+		game_complete->Render();
+	}
 }

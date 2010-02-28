@@ -19,4 +19,4 @@ grass_lvl3_grow_time = 8.0
 
 -- time machine construction rate
 --time_machine_contruction_rate = 0.005
-time_machine_contruction_rate = 0.05
+time_machine_contruction_rate = 1

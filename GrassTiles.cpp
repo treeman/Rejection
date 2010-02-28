@@ -8,6 +8,11 @@ GrassTile::GrassTile( Vec2D pos ) : Tile( pos )
 	walk_eff.Load( "sound/footstep_grass.wav" );
 }
 
+void GrassTile::Reset()
+{
+	timer = TWEAKS->GetFloat( "grass_lvl3_grow_time" );
+}
+
 void GrassTile::WalkOver()
 {
 	timer = 0;

@@ -21,6 +21,8 @@ public:
 	
 	void AddListener( WorldListener *l );
 	
+	void NewGame();
+	
 	bool GameComplete();
 	bool GameOver();
 	

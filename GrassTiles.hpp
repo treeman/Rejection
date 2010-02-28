@@ -9,6 +9,8 @@ public:
 	GrassTile( Vec2D pos );
 	virtual ~GrassTile() { }
 	
+	void Reset();
+	
 	void WalkOver();
 	bool IsSeeThrough();
 	

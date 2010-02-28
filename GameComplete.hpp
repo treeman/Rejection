@@ -5,9 +5,11 @@
 #include "Hge/Hge.hpp"
 #include "Tree/InputHandler.hpp"
 
+class World;
+
 class GameComplete : public Tree::InputHandler {
 public:
-	GameComplete();
+	GameComplete( World *world );
 	
 	bool HandleEvent( hgeInputEvent &event );
 	
@@ -17,8 +19,15 @@ public:
 	void Update( float dt );
 	void Render();
 private:
+	void NewGame();
+	void Exit();
+
 	boost::shared_ptr<hgeSprite> shade;
 	
 	bool is_active;
 	bool success;
+	
+	int pos;
+	
+	World *world;
 };

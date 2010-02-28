@@ -18,6 +18,8 @@ public:
 	bool Attach( boost::shared_ptr<TileObject> a );
 	void Detach();
 	
+	virtual void Reset() { }
+	
 	virtual void WalkOver() { }
 	virtual bool IsWalkable();
 	virtual bool IsSeeThrough();
