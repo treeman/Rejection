@@ -142,56 +142,88 @@ void World::Update( float dt )
 		//set blowing on tiles
 		const int blow_length = trap->GetBlowLength();
 		if( blow_length > 0 ) {
-//			L_ << "found something with blow length!";
-			
 			const Vec2D blow_dir = trap->GetBlowDir();
 			const Vec2D face_dir = trap->GetFaceDir();
 			
-			GridPos begin_pos;
-			int end_pos;
+			L_ << "blow_dir: " << blow_dir.x << "," << blow_dir.y;
+			L_ << "face_dir: " << face_dir.x << "," << face_dir.y;
 			
-			if( face_dir.x != 0 ) 
-			{
-				if( face_dir == Vec2D::left ) {
-					begin_pos.x = grid_pos.x - 1;
-					begin_pos.y = grid_pos.y;
-					end_pos = begin_pos.x - blow_length;
-				}
-				else if( face_dir == Vec2D::right ) {
-					begin_pos.x = grid_pos.x + 1;
-					begin_pos.y = grid_pos.y;
-					end_pos = begin_pos.x + blow_length;
-				}
+			L_ << "my_pos: " << grid_pos.x << "," << grid_pos.y;
+			
+			if( face_dir == Vec2D::left ) {
+				L_ << "left blow";
 				
-				for( int x = begin_pos.x; x < end_pos; x += face_dir.x ) {
+				int right = grid_pos.x - 1;
+				int left = right - blow_length;
+				
+				L_ << "l: " << left << " r: " << right;
+				
+				for( int x = right; x > left; --x ) {
 					BlowPos p;
 					p.dir = blow_dir;
-					p.pos = GridPos( x, begin_pos.y );
+					p.pos = GridPos( x, grid_pos.y );
 					if( IsWalkable( p.pos ) ) {
+						L_ << "blowing: " << p.pos.x << "," << p.pos.y;
 						blow_positions.push_back( p );
 					}
+					else { break; }
 				}
 			}
-			else if( face_dir.y != 0 ) 
-			{
-				if( face_dir == Vec2D::up ) {
-					begin_pos.x = grid_pos.x;
-					begin_pos.y = grid_pos.y - 1;
-					end_pos = begin_pos.y - blow_length;
-				}
-				else if( face_dir == Vec2D::down ) {
-					begin_pos.x = grid_pos.x;
-					begin_pos.y = grid_pos.y + 1;
-					end_pos = begin_pos.y + blow_length;
-				}
+			else if( face_dir == Vec2D::right ) {
+				L_ << "right blow";
 				
-				for( int y = begin_pos.y; y < end_pos; y += face_dir.y ) {
+				int left = grid_pos.x + 1;
+				int right = left + blow_length;
+				
+				L_ << "l: " << left << " r: " << right;
+				
+				for( int x = left; x < right; ++x ) {
 					BlowPos p;
 					p.dir = blow_dir;
-					p.pos = GridPos( begin_pos.x, y );
+					p.pos = GridPos( x, grid_pos.y );
 					if( IsWalkable( p.pos ) ) {
+						L_ << "blowing: " << p.pos.x << "," << p.pos.y;
 						blow_positions.push_back( p );
 					}
+					else { break; }
+				}
+			}
+			else if( face_dir == Vec2D::up ) {
+				L_ << "up blow";
+				
+				int down = grid_pos.y - 1;
+				int up = down - blow_length;
+				
+				L_ << "u: " << up << " d: " << down;
+				
+				for( int y = down; y > up; --y ) {
+					BlowPos p;
+					p.dir = blow_dir;
+					p.pos = GridPos( grid_pos.x, y );
+					if( IsWalkable( p.pos ) ) {
+						L_ << "blowing: " << p.pos.x << "," << p.pos.y;
+						blow_positions.push_back( p );
+					}
+					else { break; }
+				}
+			}
+			else if( face_dir == Vec2D::down ) {
+				L_ << "down blow";
+				
+				int up = grid_pos.y + 1;
+				int down = up + blow_length;
+				
+				L_ << "u: " << up << " d: " << down;
+				
+				for( int y = up; y < down; ++y ) {
+					BlowPos p;
+					p.dir = blow_dir;
+					p.pos = GridPos( grid_pos.x, y );
+					if( IsWalkable( p.pos ) ) {
+						L_ << "blowing: " << p.pos.x << "," << p.pos.y;
+						blow_positions.push_back( p );
+					}
+					else { break; }
 				}
 			}
 		}
@@ -327,6 +359,29 @@ void World::Render()
 	
 	float complete = time_machine->GetCompletePerc();
 	fnt->printf( 700, 10, HGETEXT_LEFT, "complete: %.2f", complete );
+	
+	if( debug_traps->Val() ) {
+		const int x = 795;
+		const int y1 = 30;
+		const int h = 10;
+		
+		int n = 0;
+		BOOST_FOREACH( boost::shared_ptr<Trap> trap, traps ) {
+			bool is_active = trap->IsActive();
+			Vec2D face_dir = trap->GetFaceDir();
+			Vec2D blow_dir = trap->GetBlowDir();
+			int activation_radius = trap->GetActivationRadius();
+			int blow_length = trap->GetBlowLength();
+			
+			Vec2D pos = trap->GetPos();
+			
+			fnt->printf( x, y1 + h * n, HGETEXT_RIGHT, 
+				"is_active: %i face_dir: %.0f,%.0f blow_dir: %.0f,%.0f r: %i blow_length: %i",
+				is_active, face_dir.x, face_dir.y, blow_dir.x, blow_dir.y, blow_length );
+			
+			++n;
+		}
+	}
 }
 
 void World::UpdateDude( boost::shared_ptr<Dude> dude, float dt )
@@ -597,4 +652,7 @@ void World::InitDebug()
 	
 	debug_dude.reset( new Tree::Dator<bool>( false ) );
 	SETTINGS->RegisterVariable( "dude_debug", boost::weak_ptr<Tree::BaseDator>( debug_dude ) );
+	
+	debug_traps.reset( new Tree::Dator<bool>( false ) );
+	SETTINGS->RegisterVariable( "traps_debug", boost::weak_ptr<Tree::BaseDator>( debug_traps ) );
 }

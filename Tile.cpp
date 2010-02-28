@@ -56,8 +56,8 @@ void Tile::RenderFlow()
 	float rotation = 0;
 	if( flow_dir == Vec2D::left ) rotation = math::PI;
 	else if( flow_dir == Vec2D::right ) rotation = 0;
-	else if( flow_dir == Vec2D::up ) rotation = math::PI_2;
-	else if( flow_dir == Vec2D::down ) rotation = 3 * math::PI_2;
+	else if( flow_dir == Vec2D::up ) rotation = 3 * math::PI_2;
+	else if( flow_dir == Vec2D::down ) rotation = math::PI_2;
 	
 	flow->spr->RenderEx( pos.x + 16, pos.y + 16, rotation );
 }

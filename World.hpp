@@ -93,4 +93,5 @@ private:
 	HgeObj hge;
 	
 	boost::shared_ptr<Tree::Dator<bool> > debug_dude;
+	boost::shared_ptr<Tree::Dator<bool> > debug_traps;
 };
