@@ -1,5 +1,6 @@
 #include "BuildOverlay.hpp"
 #include "World.hpp"
+#include "Tree/Log.hpp"
 
 #include <boost/foreach.hpp>
 
@@ -32,7 +33,11 @@ bool BuildOverlay::HandleEvent( hgeInputEvent &e )
 	//but why change it when it works? well, at least not now when I've got only a few hours left!!!
 	//raaawwrrr
 	if( !is_active ) {
-		if( world->IsDudeFacingBuildableTile() && e.type == INPUT_KEYDOWN && e.key == HGEK_SPACE  ) {
+		if( e.type == INPUT_KEYDOWN && e.key == HGEK_SPACE && world->CanSellTrap() ) {
+			L_ << "selling trap!";
+			return true;
+		}
+		else if( world->IsDudeFacingBuildableTile() && e.type == INPUT_KEYDOWN && e.key == HGEK_SPACE  ) {
 			Activate();
 			return false;
 		}

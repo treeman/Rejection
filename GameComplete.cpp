@@ -14,6 +14,9 @@ GameComplete::GameComplete( World *w, boost::shared_ptr<SpriteLoader> spr_loader
 	fnt.reset( new hgeFont( "fnt/visitor20.fnt" ) );
 	
 	head = spr_loader->Get( "menu_pointer" );
+	
+	complete.Load( "sound/fanfar.wav" );
+	failure.Load( "sound/fart.wav" );
 }
 
 bool GameComplete::HandleEvent( hgeInputEvent &e )
@@ -39,9 +42,13 @@ bool GameComplete::HandleEvent( hgeInputEvent &e )
 	return false;
 }
 
-void GameComplete::Play( bool success )
+void GameComplete::Play( bool p )
 {
+	success = p;
 	is_active = true;
+	
+	if( success ) hge->Effect_Play( complete );
+	else hge->Effect_Play( failure );
 }
 bool GameComplete::IsActive()
 {

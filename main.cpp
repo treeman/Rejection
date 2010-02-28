@@ -35,7 +35,7 @@ int main( int argc, char *argv[] )
 			800, //width
 			600, //height
 			true, //windowed
-			"7days test", //window title
+			"A Geek Valentine", //window title
 			"settings.ini"
 		);
 		
@@ -46,8 +46,8 @@ int main( int argc, char *argv[] )
 			//push your gamestates here
 			boost::shared_ptr<Tree::GameState> state( new Game() );
 			Tree::Game::Instance()->Push( state );
-//			state.reset( new Tree::Logo() );
-//			Tree::Game::Instance()->Push( state );
+			state.reset( new Tree::Logo() );
+			Tree::Game::Instance()->Push( state );
 			
 			hge->System_Start();
 		}

@@ -36,4 +36,8 @@ private:
 	boost::shared_ptr<hgeFont> fnt;
 	
 	boost::shared_ptr<Sprite> head;
+	
+	EffectObj complete;
+	EffectObj failure;
+	HgeObj hge;
 };

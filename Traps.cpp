@@ -75,7 +75,9 @@ Vec2D MagnetTrap::GetBlowDir()
 
 void MagnetTrap::Activate()
 {
-	t.Restart();
+	if( !t.IsStarted() || t.GetTime() > TWEAKS->GetFloat( "magnet_recovery_time" ) ) {
+		t.Restart();
+	}
 }
 void MagnetTrap::Deactivate()
 {

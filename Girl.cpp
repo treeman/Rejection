@@ -10,6 +10,8 @@ Girl::Girl( boost::shared_ptr<SpriteLoader> spr_loader )
 	
 	debug_girl.reset( new Tree::Dator<bool>( false ) );
 	SETTINGS->RegisterVariable( "girl_debug", boost::weak_ptr<Tree::BaseDator>( debug_girl ) );
+	
+	can_kill = false;
 }
 
 float Girl::GetSpeed()

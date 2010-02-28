@@ -12,7 +12,6 @@ Game::Game() : spr_loader( new SpriteLoader() )
 	dude_controller.reset( new DudeController( world->GetDude() ) );
 	
 	info_bar.reset( new InfoBar( spr_loader ) );
-	info_bar->SetLife( 5 );
 	world->AddListener( info_bar.get() );
 	
 	tracks.reset( new Tracks() );
@@ -20,6 +19,8 @@ Game::Game() : spr_loader( new SpriteLoader() )
 	
 	game_complete.reset( new GameComplete( world.get(), spr_loader ) );
 	build_overlay.reset( new BuildOverlay( world.get(), spr_loader, Vec2D( 624, 35 ) ) );
+	
+	world->NewGame();
 }
 Game::~Game()
 {

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Hge/Hge.hpp"
 #include "WorldListener.hpp"
 #include "Sprite.hpp"
 
@@ -19,4 +20,7 @@ private:
 	boost::shared_ptr<hgeFont> money_fnt;
 	
 	boost::shared_ptr<Sprite> background;
+	EffectObj die;
+	EffectObj katjing;
+	HgeObj hge;
 };

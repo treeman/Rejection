@@ -18,9 +18,9 @@ grass_lvl2_grow_time = 4.0
 grass_lvl3_grow_time = 8.0
 
 -- time machine construction rate
---time_machine_contruction_rate = 0.005
-time_machine_contruction_rate = 1
-time_machine_contruction_cost = 4
+time_machine_construction_rate = 0.04
+--time_machine_construction_rate = 1
+time_machine_construction_cost = 4
 
 -- costs
 button_cost = 100
@@ -31,11 +31,18 @@ pressure_pad_cost = 50
 -- traps
 pressure_pad_radius = 2
 pressure_pad_activation_time = 1.0
+pressure_pad_recovery_time = 2.0
+
 blower_length = 5
-blower_activation_time = 2.0
+blower_activation_time = 1.5
+blower_recovery_time = 1.0
+
 magnet_length = 5
-magnet_activation_time = 2.0
+magnet_activation_time = 1.5
+magnet_recovery_time = 1.0
 
 -- misc
 money = 2000
-trap_money = 40
+life = 3
+trap_money = 1
+starting_girls = 10

@@ -5,6 +5,11 @@
 #include "GrassTiles.hpp"
 #include "Tweaks.hpp"
 
+bool can_kill( boost::shared_ptr<Girl> girl )
+{
+	return girl->CanKill();
+}
+
 World::World( boost::shared_ptr<SpriteLoader> _spr_loader ) : grid( 0, 32, 25, 30, 32, 18 ),
 	spr_loader( _spr_loader )
 {
@@ -15,6 +20,8 @@ World::World( boost::shared_ptr<SpriteLoader> _spr_loader ) : grid( 0, 32, 25, 3
 	
 	time_machine.reset( new TimeMachine( spr_loader ) );
 	dude_working = spr_loader->Get( "hm" );
+	
+	working.Load( "sound/clock.wav" );
 	
 	InitDebug();
 	
@@ -45,17 +52,18 @@ void World::NewGame()
 	girls.clear();
 	
 	dude->SetPos( grid.ConvertToScreen( GridPos( 5, 0 ) ) );
+	dude->MoveStop();
 	
 	time_machine->SetCompletePerc( 0 );
 	time_machine->SetPos( grid.ConvertToScreen( GridPos( 14, 0 ) ) );
 	tiles[14][0]->Attach( time_machine );
 	
-	for( int n = 0; n < 10; ++n ) {
+	for( int n = 0; n < (int)TWEAKS->GetFloat( "starting_girls" ); ++n ) {
 		SpawnGirl();
 	}
 	
-	SetMoney( TWEAKS->GetFloat( "money" ) );
-	SetLife( 5 );
+	SetMoney( (int)TWEAKS->GetFloat( "money" ) );
+	SetLife( (int)TWEAKS->GetFloat( "life" ) );
 }
 
 bool World::GameComplete()
@@ -64,7 +72,7 @@ bool World::GameComplete()
 }
 bool World::GameOver()
 {
-	return false;
+	return life == 0;
 }
 
 bool World::IsDudeFacingBuildableTile()
@@ -78,8 +86,7 @@ bool World::IsDudeFacingBuildableTile()
 	else if( dude->FacesUp() ) { action_pos = GridPos( dude_pos.x, dude_pos.y - 1 ); }
 	else if( dude->FacesDown() ) { action_pos = GridPos( dude_pos.x, dude_pos.y + 1 ); }
 	
-	return action_pos != grid.ConvertToGrid( time_machine->GetPos() ) &&
-		IsValid( action_pos );
+	return action_pos != grid.ConvertToGrid( time_machine->GetPos() ) && IsValid( action_pos );
 }
 
 bool World::BuyTrap( boost::shared_ptr<Trap> trap )
@@ -114,6 +121,29 @@ bool World::BuyTrap( boost::shared_ptr<Trap> trap )
 	else {
 		return false;
 	}
+}
+
+bool World::CanSellTrap()
+{
+	const GridPos dude_pos = grid.ConvertToGrid( dude->Bounds().GetCenter() );
+	
+	GridPos action_pos;
+		
+	if( dude->FacesLeft() ) { action_pos = GridPos( dude_pos.x - 1, dude_pos.y ); }
+	else if( dude->FacesRight() ) { action_pos = GridPos( dude_pos.x + 1, dude_pos.y ); }
+	else if( dude->FacesUp() ) { action_pos = GridPos( dude_pos.x, dude_pos.y - 1 ); }
+	else if( dude->FacesDown() ) { action_pos = GridPos( dude_pos.x, dude_pos.y + 1 ); }
+	
+	for( Traps::iterator it = traps.begin(); it != traps.end(); ++it ) {
+		if( grid.ConvertToGrid( (*it)->GetPos() ) == action_pos ) {
+			SetMoney( money + (*it)->GetInfo().cost );
+			
+			tiles[action_pos.x][action_pos.y]->Detach();
+			traps.erase( it );
+			return true;
+		}
+	}
+	return false;
 }
 
 //don't ask
@@ -291,6 +321,7 @@ void World::Update( float dt )
 							else if( flow_dir == Vec2D::right ) girl->PushRight( flow_power );
 							else if( flow_dir == Vec2D::up ) girl->PushUp( flow_power );
 							else if( flow_dir == Vec2D::down ) girl->PushDown( flow_power );
+							AddTrapMoney();
 						}
 					}
 				}
@@ -338,6 +369,8 @@ void World::Update( float dt )
 	BOOST_FOREACH( boost::shared_ptr<Girl> girl, girls ) {
 		UpdatePerson( girl, dt );
 	}
+	girls.erase( std::remove_if( girls.begin(), girls.end(), can_kill ), girls.end() );
+	
 	UpdateDude( dude, dt );
 	
 	time_machine->Update( dt );
@@ -391,8 +424,10 @@ void World::Render()
 			gpos.x, gpos.y );
 	}
 	
-	float complete = time_machine->GetCompletePerc();
-	fnt->printf( 700, 10, HGETEXT_LEFT, "complete: %.2f", complete );
+	if( debug_complete->Val() ) {
+		float complete = time_machine->GetCompletePerc();
+		fnt->printf( 600, 10, HGETEXT_LEFT, "complete: %.2f", complete );
+	}
 	
 	if( debug_traps->Val() ) {
 		const int x = 795;
@@ -423,8 +458,26 @@ void World::UpdateDude( boost::shared_ptr<Dude> dude, float dt )
 	UpdatePerson( dude, dt );
 
 	if( WorkingOnTimeMachine() ) {
-		time_machine->SetCompletePerc( TWEAKS->GetFloat( "time_machine_contruction_rate" ) * dt +
-			time_machine->GetCompletePerc() );
+		const float cost = TWEAKS->GetFloat( "time_machine_construction_cost" ) * dt;
+		if( money >= cost ) {
+			time_machine->SetCompletePerc( TWEAKS->GetFloat( "time_machine_construction_rate" ) * dt +
+				time_machine->GetCompletePerc() );
+			SetMoney( money - cost );
+			
+			if( !hge->Channel_IsPlaying( working_channel ) ) {
+				working_channel = hge->Effect_PlayEx( working, 50 );
+			}
+		}
+	}
+	else {
+		hge->Channel_Stop( working_channel );
+	}
+	
+	BOOST_FOREACH( boost::shared_ptr<Girl> girl, girls ) {
+		if( dude->Bounds().Intersects( girl->Bounds() ) ) {
+			girl->Kill();
+			SetLife( life - 1 );
+		}
 	}
 }
 
@@ -709,4 +762,7 @@ void World::InitDebug()
 	
 	debug_traps.reset( new Tree::Dator<bool>( false ) );
 	SETTINGS->RegisterVariable( "traps_debug", boost::weak_ptr<Tree::BaseDator>( debug_traps ) );
+	
+	debug_complete.reset( new Tree::Dator<bool>( false ) );
+	SETTINGS->RegisterVariable( "completion_debug", boost::weak_ptr<Tree::BaseDator>( debug_complete ) );
 }

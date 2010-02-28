@@ -31,6 +31,8 @@ public:
 	bool IsDudeFacingBuildableTile();
 	bool BuyTrap( boost::shared_ptr<Trap> trap );
 	
+	bool CanSellTrap();
+	
 	void Update( float dt );
 	void Render();
 private:
@@ -93,6 +95,9 @@ private:
 	void SetLife( int life );
 	int life;
 	
+	EffectObj working;
+	HCHANNEL working_channel;
+	
 	void InitDebug();
 	boost::shared_ptr<Tree::Dator<bool> > show_mouse_grid;
 	boost::shared_ptr<Tree::Dator<bool> > show_bounds;
@@ -101,4 +106,5 @@ private:
 	
 	boost::shared_ptr<Tree::Dator<bool> > debug_dude;
 	boost::shared_ptr<Tree::Dator<bool> > debug_traps;
+	boost::shared_ptr<Tree::Dator<bool> > debug_complete;
 };

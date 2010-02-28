@@ -15,6 +15,9 @@ public:
 	
 	float GetSpeed();
 	
+	void Kill() { can_kill = true; }
+	bool CanKill() { return can_kill; }
+	
 	void FaceLeft();
 	void FaceRight();
 	void FaceUp();
@@ -29,4 +32,6 @@ private:
 	
 	boost::shared_ptr<Tree::Dator<bool> > debug_girl;
 	boost::shared_ptr<hgeFont> fnt;
+	
+	bool can_kill;
 };

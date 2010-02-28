@@ -10,17 +10,20 @@ InfoBar::InfoBar( boost::shared_ptr<SpriteLoader> spr_loader )
 	money = 1337;
 	money_fnt.reset( new hgeFont( "fnt/visitor15.fnt" ) );
 	background = spr_loader->Get( "brick" );
+	
+	die.Load( "sound/bounce.wav" );
+	katjing.Load( "sound/katjing.wav" );
 }
 
 void InfoBar::SetLife( int n )
 {
+	if( n < life ) hge->Effect_Play( die );
 	life = n;
-	L_ << "life: " << life;
 }
 void InfoBar::SetMoney( int n )
 {
 	money = n;
-	L_ << "money: " << money;
+//	hge->Effect_Play( katjing );
 }
 void InfoBar::Render()
 {
@@ -32,5 +35,5 @@ void InfoBar::Render()
 	}
 	
 	money_fnt->SetColor( 0xff23db4a );
-	money_fnt->printf( 480, 8, HGETEXT_RIGHT, "%i $", money );
+	money_fnt->printf( 790, 8, HGETEXT_RIGHT, "%i $", money );
 }
